@@ -29,8 +29,8 @@ file(GLOB_RECURSE CONFIGURE_DEPENDS sources src/*.cpp)
 file(GLOB_RECURSE CONFIGURE_DEPENDS headers include/*.h)
 #----------------------------------------------------------------------------
 # Add source to this project's executable.
-add_executable (Tests ${PROJECT_SOURCE_DIR}/Tests.cxx ${sources} src/Address.cpp ${headers} "src/AddressList.cpp" "src/Route.cpp" "src/Graph.cpp")
-add_executable (TSP ${PROJECT_SOURCE_DIR}/TSP.cxx ${sources} src/Address.cpp ${headers} "src/AddressList.cpp" "src/Route.cpp" "src/Graph.cpp")
+add_executable (Tests ${PROJECT_SOURCE_DIR}/Tests.cxx ${sources} src/Address.cpp ${headers} "src/AddressList.cpp" "src/Route.cpp" "src/Graph.cpp" "src/Path.cpp")
+add_executable (TSP ${PROJECT_SOURCE_DIR}/TSP.cxx ${sources} src/Address.cpp ${headers} "src/AddressList.cpp" "src/Route.cpp" "src/Graph.cpp" "src/Path.cpp")
 target_link_libraries(Tests PUBLIC matplot)
 target_link_libraries(TSP PUBLIC matplot)
 # TODO: Add tests and install targets if needed.

@@ -1,6 +1,9 @@
 ﻿#include <cmath>
+#include <cassert>
 #include <matplot/matplot.h>
+#include <TextFlow.h>
 #include "Options.h"
+#include "Path.h"
 #include "AddressList.h"
 #include "Route.h"
 #include "Graph.h"
@@ -15,12 +18,31 @@ Graph::Graph()
     depotID = 0;
 }
 
-void Graph::update(std::vector<std::pair<size_t, size_t>>& e, std::vector<double>& xs, std::vector<double>& ys,std::string c)
+void Graph::update(std::vector<std::pair<size_t, size_t>>& e, std::vector<double>& xs, std::vector<double>& ys,std::string c, int linewidth, bool tour)
 {
+    assert(xs.size() == ys.size());
+
+    int start = 0;
+    if (tour)
+    {
+        start++;
+    }
+
+
+    for (auto edge : e)
+    {
+        edges.push_back(edge);
+        lw.push_back(linewidth);
+    }
+    for (int i = start;i<xs.size();i++)
+    {
+        x.push_back(xs[i]);
+        y.push_back(ys[i]);
+    }
     
-    edges.insert(edges.end(), e.begin(), e.end());
-    x.insert(x.end(), xs.begin(), xs.end());
-    y.insert(y.end(), ys.begin(), ys.end());
+    //edges.insert(edges.end(), e.begin(), e.end());
+    //x.insert(x.end(), xs.begin(), xs.end());
+    //y.insert(y.end(), ys.begin(), ys.end());
 
     for (auto _tmp : e)
     {
@@ -67,32 +89,23 @@ std::vector<std::pair<size_t,size_t>> Graph::updateEdges(AddressList& l, bool to
     }
     return e;
 }
-std::string Graph::disp(AddressList& a, std::string c)
-{
-    return c + ":" + a.display() + " L = " + std::to_string(a.length());
-}
 
-std::string Graph::disp(Route& a, std::string c)
-{
-    return c + ":" + a.display() + " L = " + std::to_string(a.length());
-}
-
-void Graph::plot(AddressList& a , std::string c, bool tour)
+void Graph::plot(AddressList& a , std::string c, int linewidth, bool tour)
 {
     auto e = updateEdges(a,tour);
     auto xs = a.x(origin);
     auto ys = a.y(origin);
     if(!tour)
     {
-        display.push_back(disp(a,c));
+        display.push_back(a.disp(c));
     }
-    update(e,xs,ys,c);
+    update(e,xs,ys,c,linewidth,tour);
 }
 
-void Graph::plot(Route& a, std::string c)
+void Graph::plot(Route& a, std::string c, int linewidth)
 {
-    display.push_back(disp(a,c));
-    Graph::plot(a,c,true);
+    display.push_back(a.disp(c));
+    Graph::plot(a,c,linewidth,true);
 }
 
 void Graph::finalize()
@@ -102,16 +115,14 @@ void Graph::finalize()
         auto ed = edges[i];
         int i1 = ed.first;
         int i2 = ed.second;
-        std::cout << "[(" << x[i1] << "," << y[i1] << ") (" << x[i2] << "," << y[i2] << ")]" << std::endl;
+        //std::cout << "[(" << x[i1] << "," << y[i1] << ") (" << x[i2] << "," << y[i2] << ") : ("<< i1 << "," << i2 << ")]" << std::endl;
         auto a = ax->arrow(x[i1], y[i1], x[i2], y[i2]);
         a->color(cs[i]);
-        if (cs[i] == "blue")
-        {
-            a->line_width(4);
-        }
-        else a->line_width(2);
+        a->line_width(lw[i]);
     }
     ax->limits_mode_automatic();
+    ax->xlabel("X");
+    ax->ylabel("Y");
     makeLegend();
 }
 
@@ -150,11 +161,12 @@ void Graph::makeLegend()
 {
     double n = display.size();
     double width = legend_space * (max(x)-min(x));
-    double height = legend_space * (max(y)-min(y));
+    double height = maxspace*legend_space * (max(y)-min(y));
     double xmin = min(x) + width;
     double ymin = min(y) + height;
     for (int i = 0; i < n; i++)
     {
-        ax->text(xmin , height * i + ymin, display[i]);
+        std::string text = TextFlow::Column(display[i]).width(textwidth).toString();
+        ax->text(xmin , height * i + ymin, text);
     }
 }

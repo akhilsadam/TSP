@@ -4,7 +4,7 @@
 
 Route::Route()
 {
-	AddressList::add_address(depot);
+	add_address(depot);
 }
 void Route::add_address(Address a)
 {

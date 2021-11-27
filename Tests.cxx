@@ -27,9 +27,6 @@ int main()
 	#ifdef L1norm
 		assertion(a.distance(b),2);
 	#elif defined L2norm
-		std::cout << a.distance(b) << std::endl;
-		std::cout << sqrt(2) << std::endl;
-		std::cout << a.distance(b) -sqrt(2) << std::endl;
 		assertion(a.distance(b), sqrt(2));
 	#elif defined maxnorm
 		assertion(a.distance(b), 1);
@@ -171,33 +168,58 @@ int main()
 		std::string ans(" The runtime complexity: \n\
 			We have a reverse_route method of O(n), \
 			and call that method for all m<n options. \
-			So we have approximately n^2/2 calls to reverse_route. \
+			So we have approximately n^2/2 calls to reverse_route, at minimum, \
+			and approximately n^3/2 calls at maximum (due to the while loop). \
 			We also have a comparision and copy call, the comparision \
 			being of order 2n and the (sometimes called) copy of order n. \
-			Therefore the time complexity is ~ O(n^2/2)*O(n+n+2n) = O(2n^3) ~= O(n^3),\
+			So we have that the time complexity is bounded between O(n^3) and O(n^4): \
+			 O(n^2/2)*O(n+n+2n) <= TC <= O(n^2/2)*O(n+n+2n) \
+			==> O(n^3) <= TC <= O(n^4), \
 			which is pretty bad. Note the memory complexity is clearly O(n), \
 			since we only store a couple of AddressLists. ");
 		std::cout << ans << std::endl;
 
 		std::cout << "\n--59.6--\n" << std::endl;
 		std::vector<Address> itinerary{ Address({0,1}), Address({2,0}), Address({3,1}),
-				Address({2,4}), Address({-5,5}), Address({-2,4}), Address({3,3}) };
+				Address({2,4}), Address({-5,5}), Address({-2,4}), Address({3,3}),
+		        Address({2,8}), Address({-3.5,5}), Address({-4.2,4}), Address({1.5,3}),
+				Address({-6.2,4}), Address({1.5,-8}), Address({-2,-2}) };
 		std::mt19937 rng;
 		Route r;
-		for (int i = 0; i < 5; i++)
+		std::vector<double> optlen, greedlen;
+		// not looping over greedlen as it is deterministic.
+		r.add_address(AddressList(itinerary));
+		Route greed = r.greedy_route();
+
+		for (int i = 0; i < 60; i++)
 		{
 			r.clear();
 			std::shuffle(itinerary.begin(), itinerary.end(),rng);
 			r.add_address(AddressList(itinerary));
-			Route greed = r.greedy_route();
 			Route opt = r.opt2_route();
-			std::cout << opt.length() << std::endl;
+			optlen.push_back(opt.length());
+			greedlen.push_back(greed.length());
 			plt.plot(opt, std::string("blue"));
-			plt.plot(greed, std::string("red"));
+			plt.plot(greed, std::string("red"),1);
 			plt.show(false);
-			plt.save("greed_vs_opt_" + std::to_string(i));
+			plt.save("greed_vs_opt2_" + std::to_string(i));
 			plt = Graph();
 		}
+
+		auto h1 = hist(optlen);
+		hold(on);
+		auto h2 = hist(greedlen);
+		//h1->normalization(histogram::normalization::probability);
+		h1->bin_width(0.25);
+		h1->face_alpha(0.5);
+		//h2->normalization(histogram::normalization::probability);
+		h2->bin_width(0.25);
+		h2->face_alpha(0.5);
+		title("Length Histogram for greedy,opt2 algorithms");
+		xlabel("Length (opt2 is blue)");
+		ylabel("Counts");
+		save("img/greed_vs_opt2_hist.jpg");
+		show();
 
 
 

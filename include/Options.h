@@ -11,6 +11,7 @@ constexpr double minprecision = std::numeric_limits<double>::digits10/2.0 -1;
 //#define L1norm // this is Manhattan distance
 //#define maxnorm // this is max(dx,dy) distance
 //---------------- graph
-constexpr double legend_space = 0.08; // legend spacing
+constexpr double legend_space = 0.05; // legend spacing
 constexpr int printDigits = 3; // # of digits to print in output
 constexpr int printDecimalDigits = 2;
+constexpr int textwidth = 60;

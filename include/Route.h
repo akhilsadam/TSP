@@ -10,7 +10,7 @@ public:
 	Route();
 	void add_address(Address a);
 	void add_address(AddressList a);
-	double length();
+	double length() override;
 	std::string display();
 	void print();
 	Route greedy_route();
