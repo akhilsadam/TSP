@@ -1,0 +1,3 @@
+CPM.cmake (cmake FetchContent wrapper)
+matplotplusplus (https://github.com/alandefreitas/matplotplusplus)
+TextFlowCpp (library for wrapping text; a single-include)
