@@ -8,6 +8,7 @@ private:
 	Address depot = Address();
 public:
 	Route();
+	Route(std::vector<Address> in_path);
 	void add_address(Address a);
 	void add_address(AddressList a);
 	double length() override;

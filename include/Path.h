@@ -26,6 +26,7 @@ public:
 	std::vector<Address>::iterator end();
 	std::vector<Address>::reverse_iterator rbegin();
 	std::vector<Address>::reverse_iterator rend();
+	void insert(int position, const Address a);
 	void insert(std::vector<Address>::iterator position, std::vector<Address>::iterator first, std::vector<Address>::iterator last);
 	void erase(std::vector<Address>::iterator first, std::vector<Address>::iterator last);
 	void clear();

@@ -62,35 +62,82 @@ way Way::greedy(way w)
 	return std::get<Route>(w).greedy_route();
 }
 
-way Way::insert(way sink, std::vector<Address>::iterator sbegin,
-									std::vector<Address>::iterator src_start,
-									std::vector<Address>::iterator src_end)
+//way Way::insert(way sink, std::vector<Address>::iterator sbegin,
+//									std::vector<Address>::iterator src_start,
+//									std::vector<Address>::iterator src_end)
+//{
+//	way out = sink;
+//	if (out.index() == 0)
+//	{
+//		std::get<AddressList>(out).insert(sbegin,src_start,src_end);
+//	}
+//	else
+//	{
+//		std::get<Route>(out).insert(sbegin, src_start, src_end);
+//	}
+//	return out;	
+//}
+
+way Way::insert(way src, way sink, int sbegin,int src_start,int src_end)
 {
 	way out = sink;
-	if (out.index() == 0)
+	bool isAddressList = true;
+	if (out.index() != 0)
 	{
-		std::get<AddressList>(out).insert(sbegin,src_start,src_end);
+		isAddressList = false;
 	}
-	else
+
+	for (int i = src_start; i < src_end; i++)
 	{
-		std::get<Route>(out).insert(sbegin, src_start, src_end);
+		if (isAddressList)
+		{
+			std::get<AddressList>(out).insert(sbegin, Way::Way::get(src, i));
+		}
+		else 
+		{
+			std::get<Route>(out).insert(sbegin, Way::Way::get(src, i));
+		}
 	}
-	return out;	
+	return out;
 }
 
-way Way::erase(way w, std::vector<Address>::iterator first, std::vector<Address>::iterator last)
+way Way::erase(way w,int first, int last)
 {
 	way w2 = w;
 	if (w2.index() == 0)
 	{
-		std::get<AddressList>(w2).erase(first,last);
+		auto& a2 = std::get<AddressList>(w2);
+		a2.erase(a2.begin()+first,a2.begin()+last);
 	}
 	else
 	{
-		std::get<Route>(w2).erase(first,last);
+		auto& a2 = std::get<Route>(w2);
+		a2.erase(a2.begin() + first, a2.begin() + last);
 	}
 	return w2;
 }
+//way Way::erase(way w, int first, int last)
+//{
+//	way out = w;
+//	bool isAddressList = true;
+//	if (out.index() != 0)
+//	{
+//		isAddressList = false;
+//	}
+//
+//	for (int i = first; i < last; i++)
+//	{
+//		if (isAddressList)
+//		{
+//			std::get<AddressList>(out).erase(i);
+//		}
+//		else
+//		{
+//			std::get<Route>(out).erase(i);
+//		}
+//	}
+//	return out;
+//}
 std::vector<Address>::iterator Way::begin(way w)
 {
 	if (w.index() == 0)

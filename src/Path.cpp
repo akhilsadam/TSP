@@ -57,6 +57,11 @@ std::vector<Address>::reverse_iterator Path::rend()
 	return path.rend();
 }
 
+void Path::insert(int position, const Address a)
+{
+	path.insert(path.begin()+position, a);
+}
+
 void Path::insert(std::vector<Address>::iterator position, std::vector<Address>::iterator first, std::vector<Address>::iterator last)
 {
 	path.insert(position, first, last);

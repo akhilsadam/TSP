@@ -24,11 +24,12 @@ private:
 	std::vector<way> schedule;
 public:
 	MultiplePath();
-	// MultiplePath(std::vector<way> in_paths); //can be really easily made to work, but not bothering yet..
+	MultiplePath(std::vector<way> in_paths);
 	MultiplePath(std::vector<AddressList> in_paths);
 	MultiplePath(std::vector<Route> in_paths);
 
 	int size();
+	int n_deliveries();
 	double length();
 	way& operator[](int i);
 

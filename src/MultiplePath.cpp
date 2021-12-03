@@ -6,8 +6,9 @@
 #include "Route.h"
 #include "Graph.h"
 #include <variant>
-#include "..\include\MultiplePath.h"
+#include <MultiplePath.h>
 #include <Way.h>
+#include <ostream>
 using way = std::variant<AddressList, Route>;
 
 MultiplePath::MultiplePath() {}
@@ -25,17 +26,26 @@ MultiplePath::MultiplePath(std::vector<Route> in_paths)
 		schedule.push_back(path);
 	}
 }
-//MultiplePath::MultiplePath(std::vector<way> in_paths): schedule(in_paths)
-//{
-//	if (schedule.size() > colors.size())
-//	{
-//		std::cout << "[ERROR]: Cannot handle so many paths in MultiplePath object" << std::endl;
-//		throw("");
-//	}
-//}
+MultiplePath::MultiplePath(std::vector<way> in_paths): schedule(in_paths)
+{
+	if (schedule.size() > colors.size())
+	{
+		std::cout << "[ERROR]: Cannot handle so many paths in MultiplePath object" << std::endl;
+		throw("");
+	}
+}
 int MultiplePath::size()
 {
 	return schedule.size();
+}
+int MultiplePath::n_deliveries()
+{
+	int n = 0;
+	for (auto path : schedule)
+	{
+		n += Way::size(path);
+	}
+	return n;
 }
 double MultiplePath::length()
 {
@@ -83,11 +93,16 @@ void MultiplePath::swap(int p1, int p2, int v11, int v12, int v21, int v22)
 	way w1 = schedule[p1];
 	way w2 = schedule[p2];
 	// cross-insertion
-	w2 = Way::insert(w2, Way::begin(w2) + v21, Way::begin(w1) + v11, Way::begin(w1) + v12);
-	w1 = Way::insert(w1, Way::begin(w1) + v11, Way::begin(w2) + v21 + l1, Way::begin(w2) + v22 + l1);
+	//way w3 = Way::insert(w2, Way::begin(w2) + v21, Way::begin(w1) + v11, Way::begin(w1) + v12);
+	w2 = Way::insert(w1,w2,v21,v11,v12);
+	//w1 = Way::insert(w1, Way::begin(w1) + v11, Way::begin(w2) + v21 + l1, Way::begin(w2) + v22 + l1);
+	w1 = Way::insert(w2,w1,v11,v21 + l1,v22 + l1);
+
 	// erasure
-	w1 = Way::erase(w1, Way::begin(w1) + v11 + l2, Way::begin(w1) + v12 + l2);
-	w2 = Way::erase(w2, Way::begin(w2) + v21 + l1, Way::begin(w2) + v22 + l1);
+	/*w1 = Way::erase(w1, Way::begin(w1) + v11 + l2, Way::begin(w1) + v12 + l2);*/
+	w1 = Way::erase(w1, v11 + l2, v12 + l2);
+	/*w2 = Way::erase(w2, Way::begin(w2) + v21 + l1, Way::begin(w2) + v22 + l1);*/
+	w2 = Way::erase(w2, v21 + l1, v22 + l1);
 	// replacement
 	schedule[p1] = w1;
 	schedule[p2] = w2;
@@ -115,9 +130,11 @@ MultiplePath MultiplePath::swapAndOptimize(int p1, int p2, int v11, int v12, int
 }
 MultiplePath MultiplePath::opt2_heuristic(bool opt2)
 {
-	int start = 1; //assuming cannot change start and end(since the depot position is fixed)
+	int start{ 0 }; //assuming cannot change start and end(since the depot position is fixed)
 	MultiplePath best = *this;
 	int npath = size();
+	int N, M;
+
 
 	MultiplePath current;
 	bool restart = false;
@@ -127,8 +144,8 @@ MultiplePath MultiplePath::opt2_heuristic(bool opt2)
 		{
 			for (int j = i + 1; j < npath; j++) // second path
 			{
-				int N = Way::size(schedule[i]);
-				int M = Way::size(schedule[j]);
+				N = Way::size(best.schedule[i]);
+				M = Way::size(best.schedule[j]);
 
 				for (int v11 = start; v11 < N - 1; v11++) // first index, first path
 				{
@@ -138,22 +155,25 @@ MultiplePath MultiplePath::opt2_heuristic(bool opt2)
 						{
 							for (int v22 = v21 + 1; v22 < M; v22++) // second index, second path
 							{
+								//std::cout << "N: " << N << " M:" << M << " v12:" << v12 << " v22:" << v22 << std::endl;
 								current = best.swapAndOptimize(i, j, v11, v12, v21, v22, opt2);
 								if (current.length() < best.length())
 								{
 									best = current;
 									restart = true;
+									std::cout << best.n_deliveries() << " ";
 									break;
 								}
 							}
+							if (restart) break;
 						}
+						if (restart) break;
 					}
+					if (restart) break;
 				}
-				if (restart)
-				{
-					break;
-				}
+				if (restart) break;
 			}
+			if (restart) break;
 		}
 		//std::cout << restart << std::endl;
 		if (!restart)

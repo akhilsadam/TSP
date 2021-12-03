@@ -6,6 +6,14 @@ Route::Route()
 {
 	add_address(depot);
 }
+Route::Route(std::vector<Address> in_path)
+{
+	add_address(depot);
+	for (auto a : in_path)
+	{
+		add_address(a);
+	}
+}
 void Route::add_address(Address a)
 {
 	if (in_path(a))

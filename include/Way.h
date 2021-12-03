@@ -18,12 +18,12 @@ public:
 
 	static way greedy(way w);
 
-	static way insert(way sink, 
-		std::vector<Address>::iterator sink_insert,
-		std::vector<Address>::iterator src_start,
-		std::vector<Address>::iterator src_end);
+	static way insert(way src, way sink, 
+		int sink_insert,
+		int src_start,
+		int src_end);
 	static way erase(way w, 
-		std::vector<Address>::iterator first,
-		std::vector<Address>::iterator last);
+		int first,
+		int last);
 	static std::vector<Address>::iterator begin(way w);
 };
