@@ -4,7 +4,9 @@
 #include <optional>
 #include <Options.h>
 #include <Address.h>
-// abstract base class for AddressList (paths) and Route (tours)
+// abstract-ish base class for AddressList (paths) and Route (tours)
+// --unfortunately I cannot make only virtual methods without implementation (like an interface) 
+//   due to g++ restrictions (it needs at least one virtual method with a default implementation)
 // probably ought to move more methods back to this class...
 class Path
 {
@@ -24,6 +26,8 @@ public:
 	std::vector<Address>::iterator end();
 	std::vector<Address>::reverse_iterator rbegin();
 	std::vector<Address>::reverse_iterator rend();
+	void insert(std::vector<Address>::iterator position, std::vector<Address>::iterator first, std::vector<Address>::iterator last);
+	void erase(std::vector<Address>::iterator first, std::vector<Address>::iterator last);
 	void clear();
 
 	bool in_path(Address a);
@@ -32,6 +36,7 @@ public:
 	virtual double length();
 	Address index_closest_to(Address a);
 
+	void set(int i, Address a);
 
 	const Address& operator[](int i) const;
 	bool operator==(const Path& rhs);

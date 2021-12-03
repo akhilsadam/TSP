@@ -1,0 +1,68 @@
+  |                                                                              |                                                                      |   0%  |                                                                              |....                                                                  |   6%
+   inline R code fragments
+
+  |                                                                              |.........                                                             |  12%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |.............                                                         |  19%
+  ordinary text without R code
+
+  |                                                                              |..................                                                    |  25%
+label: variablesetup (with options) 
+List of 3
+ $ include: logi TRUE
+ $ echo   : logi FALSE
+ $ results: logi FALSE
+
+  |                                                                              |......................                                                |  31%
+  ordinary text without R code
+
+  |                                                                              |..........................                                            |  38%
+label: tspgif (with options) 
+List of 6
+ $ include   : logi FALSE
+ $ fig.show  : chr "animate"
+ $ interval  : num 0.2
+ $ fig.width : num 8
+ $ fig.height: num 6
+ $ fig.aligh : chr "center"
+
+  |                                                                              |...............................                                       |  44%
+  ordinary text without R code
+
+  |                                                                              |...................................                                   |  50%
+label: unnamed-chunk-1 (with options) 
+List of 2
+ $ echo   : logi FALSE
+ $ results: chr "hide"
+
+  |                                                                              |.......................................                               |  56%
+  ordinary text without R code
+
+  |                                                                              |............................................                          |  62%
+label: code (with options) 
+List of 1
+ $ fig.cap: chr "The automatic numbering of this figure will only work if it includes a figure caption, user beware!"
+
+  |                                                                              |................................................                      |  69%
+  ordinary text without R code
+
+  |                                                                              |....................................................                  |  75%
+label: atable
+  |                                                                              |.........................................................             |  81%
+  ordinary text without R code
+
+  |                                                                              |.............................................................         |  88%
+label: unnamed-chunk-2 (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |..................................................................    |  94%
+  ordinary text without R code
+
+  |                                                                              |......................................................................| 100%
+label: unnamed-chunk-3
+
+"C:/Users/sadam/AppData/Local/Pandoc/pandoc" +RTS -K512m -RTS article.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output article.html --lua-filter "C:\Users\sadam\R\win-library\4.0\bookdown\rmarkdown\lua\custom-environment.lua" --lua-filter "C:\Users\sadam\R\win-library\4.0\rmarkdown\rmarkdown\lua\pagebreak.lua" --lua-filter "C:\Users\sadam\R\win-library\4.0\rmarkdown\rmarkdown\lua\latex-div.lua" --self-contained --wrap preserve --lua-filter "C:/Users/sadam/R/win-library/4.0/pagedown/resources/lua/uri-to-fn.lua" --lua-filter "C:/Users/sadam/R/win-library/4.0/pagedown/resources/lua/loft.lua" --lua-filter "C:/Users/sadam/R/win-library/4.0/pagedown/resources/lua/footnotes.lua" --csl "C:/Users/sadam/R/win-library/4.0/pagedown/resources/csl/journal-of-statistical-software.csl" --lua-filter "C:/Users/sadam/R/win-library/4.0/pagedown/resources/lua/jss.lua" --metadata link-citations=true --mathjax "--mathjax=https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" --metadata newpage_html_class="page-break-after" --standalone --section-divs --template "styling\wp_paged.html" --no-highlight --css styling/wp.css --css styling/wp-fonts.css --css styling/wp-page.css --include-in-header "C:\Users\sadam\AppData\Local\Temp\RtmpwDzyjE\rmarkdown-str854d071375597.html" --citeproc 

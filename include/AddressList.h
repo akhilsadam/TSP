@@ -20,4 +20,5 @@ public:
 
 	AddressList greedy_route();
 	AddressList opt2_route(bool tour = false);
+
 };

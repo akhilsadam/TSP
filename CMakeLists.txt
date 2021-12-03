@@ -17,8 +17,8 @@ CPMAddPackage(
 #----------------------------------------------------------------------------
 # Setup include directories and compile definitions
 #
-set(CMAKE_CXX "g++")
-set(CMAKE_CXX_FLAGS "-std=c++17") # use -w to turn off warnings
+set (CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_FLAGS "-std=c++17") # use -w to turn off warnings
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 #----------------------------------------------------------------------------
@@ -29,8 +29,8 @@ file(GLOB_RECURSE CONFIGURE_DEPENDS sources src/*.cpp)
 file(GLOB_RECURSE CONFIGURE_DEPENDS headers include/*.h)
 #----------------------------------------------------------------------------
 # Add source to this project's executable.
-add_executable (Tests ${PROJECT_SOURCE_DIR}/Tests.cxx ${sources} src/Address.cpp ${headers} "src/AddressList.cpp" "src/Route.cpp" "src/Graph.cpp" "src/Path.cpp")
-add_executable (TSP ${PROJECT_SOURCE_DIR}/TSP.cxx ${sources} src/Address.cpp ${headers} "src/AddressList.cpp" "src/Route.cpp" "src/Graph.cpp" "src/Path.cpp")
+add_executable (Tests ${PROJECT_SOURCE_DIR}/Tests.cxx ${sources} src/Address.cpp ${headers} "src/AddressList.cpp" "src/Route.cpp" "src/Graph.cpp" "src/Path.cpp" "src/MultiplePath.cpp" "src/Way.cpp")
+add_executable (TSP ${PROJECT_SOURCE_DIR}/TSP.cxx ${sources} src/Address.cpp ${headers} "src/AddressList.cpp" "src/Route.cpp" "src/Graph.cpp" "src/Path.cpp" "src/MultiplePath.cpp" "src/Way.cpp")
 target_link_libraries(Tests PUBLIC matplot)
 target_link_libraries(TSP PUBLIC matplot)
 # TODO: Add tests and install targets if needed.

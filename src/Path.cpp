@@ -4,6 +4,8 @@
 #include <Options.h>
 #include <Path.h>
 #include <Address.h>
+#include <cassert>
+
 Path::Path(){}
 Path::Path(std::vector<Address> in_path): path(in_path){}
 std::string Path::disp(std::string c)
@@ -55,6 +57,16 @@ std::vector<Address>::reverse_iterator Path::rend()
 	return path.rend();
 }
 
+void Path::insert(std::vector<Address>::iterator position, std::vector<Address>::iterator first, std::vector<Address>::iterator last)
+{
+	path.insert(position, first, last);
+}
+
+void Path::erase(std::vector<Address>::iterator first, std::vector<Address>::iterator last)
+{
+	path.erase(first, last);
+}
+
 void Path::clear()
 {
 	path.clear();
@@ -94,6 +106,11 @@ Address Path::index_closest_to(Address a)
 		throw("");
 		return Address();
 	}
+}
+void Path::set(int i, Address a)
+{
+	assert(i >= 0); assert(i < path.size());
+	path[i] = a;
 }
 std::optional<Address> Path::index_closest_to(Address a, Path& blacklist, bool masking)
 {

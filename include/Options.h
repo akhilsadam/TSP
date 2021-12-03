@@ -1,5 +1,7 @@
 #pragma once
 #include <limits>
+#include <vector>
+#include <string>
 #include <math.h>
 //---------------- precision definition
 // Not using Catch2 as that has undefined reference runtime errors on my machine
@@ -15,3 +17,4 @@ constexpr double legend_space = 0.05; // legend spacing
 constexpr int printDigits = 3; // # of digits to print in output
 constexpr int printDecimalDigits = 2;
 constexpr int textwidth = 60;
+const std::vector<std::string> colors = {"red","blue","yellow","green","cyan","violet","crimson"};

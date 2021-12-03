@@ -1,0 +1,159 @@
+---
+title: "TBW"
+author:
+  - name: Akhil Sadam
+    affiliation: Aerospace Department, University of Texas at Austin
+    email: <akhil.sadam@utexas.edu>
+date: '30 novembre, 2021 to `r format(Sys.time(), "%d %B, %Y")`'
+abstract: 'TBW'
+# at least one keyword must be supplied
+keywords: [traveling salesman problem, multiple traveling salesman problem, graph theory, c++, rstudio]
+links-to-footnotes: false
+paged-footnotes: true
+bibliography: packages.bib
+output:
+  pagedown::jss_paged:
+    template: styling/wp_paged.html
+    self_contained: true
+    css: ['styling/wp.css', 'styling/wp-fonts.css', 'styling/wp-page.css']
+    pandoc_args: --mathjax
+link-citations: yes
+# uncomment this line to produce HTML and PDF in RStudio:
+knit: pagedown::chrome_print
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.align = 'center')
+#require(magick)
+library("jpeg")
+require("R.utils")
+library("animation")
+```
+
+```{r variablesetup, include=TRUE, echo=FALSE,results=FALSE}
+imgdir_path<-Sys.getenv("rstudio_img")
+imgdir<-imgdir_path[1]
+print(paste("IMG Directory:",imgdir))
+
+outdir_path<-Sys.getenv("rstudio_out_img")
+outdir<-outdir_path[1]
+print(paste("OUT Directory:",outdir))
+imshow <- function(imgname)
+{
+  jj <- readJPEG(paste(imgdir,"/",imgname,sep=""),native=TRUE)
+  plot(0:1,0:1,type="n",ann=FALSE,axes=FALSE)
+  rasterImage(jj,0,0,1,1) 
+}
+```
+
+```{r tspgif,include=FALSE,fig.show='animate',interval=0.2,fig.width=8,                fig.height=6,fig.aligh='center'}
+#print(paste("IMG Directory:",imgdir))
+#for (i in 0:59)
+#{
+#  imshow(paste("greed_vs_opt2_",i,".jpg",sep=""))
+#}
+```
+
+```{r,echo=FALSE,results='hide'}
+saveGIF(
+{
+  for (i in 0:59)
+ {
+   imshow(paste("greed_vs_opt2_",i,".jpg",sep=""))
+ }
+},
+movie.name = "greed_vs_opt2.gif", 
+interval = 0.1, 
+ani.width = 560, 
+ani.height = 420,
+)
+```
+
+![](greed_vs_opt2.gif)
+
+    # The Basics {.chapter}
+
+    ## Introduction
+
+    This template is based on the `pagedown::html_paged` template and modified to meet the requirements of a generic thesis document. Standard RMarkdown formatting can be used for smooth and distraction free writting, for example I will add a citation for the {knitr} package which is located in the `Thesis.bib` file auto-generated in this template [@R-knitr].
+
+    Thanks to the [help](https://github.com/rstudio/pagedown/issues/101) of [Romain Lesur](https://github.com/RLesur) this template has the ability to tag section headers with the word "Chapter ". To have your chapters display as this one (*Chapter 1 The Basics*) use the `{.chapter}` class like this:
+
+    ***rmarkdown***
+
+    ``` {.markdown}
+    ---
+    output:
+      pagedown::thesis_paged
+        number_Sections: yes
+    ---
+    # The Basics {.chapter}
+
+    ## Introduction
+
+    This template is based on the `pagedown::html_paged` template...
+
+## Second level heading
+
+Here is some code and a plot, with a figure caption, Figure \@ref(fig:code):
+
+```{r code, fig.cap='The automatic numbering of this figure will only work if it includes a figure caption, user beware!'}
+plot(iris$Sepal.Length,
+     iris$Sepal.Width,
+     col = iris$Species,
+     pch = 19)
+```
+
+Here is an example of an abbreviation where I use the `<abbr>` html tag <abbr title="Brent Thorne">BT</abbr>. In the future there may be a pandoc solution to abbreviation management, however <abbr title="Hyper Text Markup Language">HTML</abbr> is the way to go for now.
+
+# Understanding the method to the madness {.chapter}
+
+Need formulas? Here's some `mathjax` notation:
+
+$$
+\beta = \sum^{1 - k}\frac{\delta D}{\sum\frac{\Delta \gamma A}{X-i}}
+$$
+
+## Adding Tables
+
+You can easily add tables to this document like so, and you can also reference them like a figure, Table \@ref(tab:atable):
+
+```{r atable}
+knitr::kable(
+  iris[1:4, 1:5],
+  align = 'c',
+  caption = 'A caption for the table.',
+  col.names = c("Sepal L", "Sepal W", "Petal L", "Petal W", "Species")
+)
+```
+
+# The final chapter to my pretend thesis {.chapter}
+
+There are still a few features that would be nice to implement in the future for this template. For instance:
+
+1.  It would be great to have the ability to use the [{redoc}](https://github.com/noamross/redoc) package to help those who have the ever dreaded "USE WORD ONLY" supervisors.
+
+2.  It would also be great to have the ability to generate a *Reference* section for each *Chapter* for those who are writing in the "integrated article" format.
+
+3.  Along with that, it would be great to pull the YAML data from a child .Rmd file and use it as a way to add the Chapter titles and any other subsequent information (for example a thesis chapter can often actually be a full manuscript and or published paper which would need to have all authors listed for that chapter specifically as well as the journal publication information/ citation data).
+
+# References {.unnumbered}
+
+```{r, include=FALSE}
+knitr::write_bib(c('knitr', 'rmarkdown', 'xaringan'), 'packages.bib')
+```
+
+```{=html}
+<!-- This '<div id="refs"></div>' needs to 
+be here if you have appendix pages 
+otherwise you can remove it.-->
+```
+::: {#refs}
+:::
+
+# APPENDIX I {.unnumbered}
+
+```{r}
+knitr::kable(iris[1:10,1:5], align = 'c')
+```
