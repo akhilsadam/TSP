@@ -1,6 +1,8 @@
 ### HOW TO RUN ### 
-Note this is a Visual Studio build using CMake. (For Linux just change the buildsystem to make instead in knit.sh)
-I am not using Linux as for some not-yet-known reason, R fails to install on my Linux VM (so using Windows is just easier).
+Note this is a gcc/g++ build using CMake, and requires R if you would like to compile the paper as well.
+For some not-yet-known reason, R fails to install on my Linux VM (so have tested on my Windows machine and 
+on a WSL(Windows Subsystem for Linux) terminal with another machine. So the entire project should work on a Linux machine easily,
+though this was not tested.
 
 1) Make sure all the dependencies have been installed
 2) $ bash knit.sh -r
