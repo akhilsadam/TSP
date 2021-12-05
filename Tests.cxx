@@ -284,16 +284,30 @@ int main()
 
 #endif
 
+	//std::cout << "\n--59.7--\n" << std::endl;
+	//std::vector<way> itinerary{ AddressList({Address({0,1}), Address({2,0}), Address({3,1}),
+	//		Address({2,4}), Address({-5,5}), Address({-2,4}), Address({3,3}),
+	//		Address({2,8})}),
+	//	AddressList({Address({-4.2,4}), Address({1.5,3}),
+	//		Address({-6.2,4}), Address({1.5,-8}), Address({-2,-2}),
+	//		Address({3.2,4}), Address({1.4,-8}), Address({-1,-2}) }),
+	//	AddressList({Address({-8,-4.2}), Address({1.5,3.5}), Address({4.5,7.5})}),
+	//	AddressList({Address({2,2}), Address({3,3}), Address({1,1}),Address({8,8})}),
+	//	Route({Address({1,2}), Address({2,3}), Address({3,4}),Address({3,2})}) };
+	//MultiplePath system{ itinerary };
+	//system.plot("system");
+	//MultiplePath solvedopt = system.opt2_heuristic();
+	//solvedopt.plot("system_solved_opt2");
+	//MultiplePath solvedgreed = system.opt2_heuristic(false);
+	//solvedgreed.plot("system_solved_greedy");
+
 	std::cout << "\n--59.7--\n" << std::endl;
 	std::vector<way> itinerary{ AddressList({Address({0,1}), Address({2,0}), Address({3,1}),
 			Address({2,4}), Address({-5,5}), Address({-2,4}), Address({3,3}),
 			Address({2,8})}),
 		AddressList({Address({-4.2,4}), Address({1.5,3}),
 			Address({-6.2,4}), Address({1.5,-8}), Address({-2,-2}),
-			Address({3.2,4}), Address({1.4,-8}), Address({-1,-2}) }),
-		AddressList({Address({-8,-4.2}), Address({1.5,3.5}), Address({4.5,7.5})}),
-		AddressList({Address({2,2}), Address({3,3}), Address({1,1}),Address({8,8})}),
-		Route({Address({1,2}), Address({2,3}), Address({3,4}),Address({3,2})}) };
+			Address({3.2,4}), Address({1.4,-8}), Address({-1,-2}) }) };
 	MultiplePath system{ itinerary };
 	system.plot("system");
 	MultiplePath solvedopt = system.opt2_heuristic();

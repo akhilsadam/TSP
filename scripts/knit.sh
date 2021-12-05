@@ -89,11 +89,11 @@ do
     esac
 done
 
-echo 'Source (Absolute) Directory: $src'
-echo 'Build (Relative) Directory : $build'
-echo 'Output (Relative) Directory: $output'
+echo "Source (Absolute) Directory: $src"
+echo "Build (Relative) Directory : $build"
+echo "Output (Relative) Directory: $output"
 rsrc=$(realpath --relative-to="$build" "$src")
-echo 'Source (Relative From Build) Directory: $rsrc'
+echo "Source (Relative From Build) Directory: $rsrc"
 
 if [ "$clean" = true ] ; then
 	cd $src$build
