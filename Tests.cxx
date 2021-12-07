@@ -94,7 +94,7 @@ int main()
 	assert(tour.index_closest_to(a) == d);
 
 	std::cout << "\n--59.3.a--\n" << std::endl;
-	path = AddressList ({ c,d,a,b });
+	path = AddressList({ c,d,a,b });
 	AddressList path2{ {c,a,d,b} };
 	AddressList greedyPath = path.greedy_route();
 	path.print();
@@ -112,7 +112,7 @@ int main()
 	greedyTour.print();
 	testTour.print();
 	assert(greedyTour == testTour);
-	
+
 
 	std::cout << "\n--59.3ex--" << std::endl;
 	std::cout << "TEST from book:\n" << std::endl;
@@ -140,7 +140,7 @@ int main()
 	plt = Graph();
 
 	std::cout << "\n--59.4.a--\n" << std::endl;
-	path = AddressList( {c,b,c} );
+	path = AddressList({ c,b,c });
 	AddressList rpath = path.reverse_route(1, 2);
 	assertion(rpath.length(), sqrt(2));
 	path.print();
@@ -281,20 +281,22 @@ int main()
 		hold(off); cla();
 	}
 
-	auto optS = scatter(optT, optlen, 8);
-	optS->marker_face_color({ .5f, .7f, 1.f });
-	optS->marker_color({ .5f, .7f, 1.f });
-	optS->marker_style(line_spec::marker_style::circle);
-	hold(on);
-	auto greedS = scatter(greedT, greedlen, 8);
-	greedS->marker_face_color({ 1.f, .3f, .2f });
-	greedS->marker_color({ 1.f, .3f, .2f });
-	greedS->marker_style(line_spec::marker_style::circle);
-	title("Length vs Time for greedy,opt2 algorithms");
-	xlabel("Time [us] (opt2 is blue)");
-	ylabel("Length");
-	save("img/greed_vs_opt2_LT.jpg");
-	hold(off); cla();
+	{
+		auto optS = scatter(optT, optlen, 8);
+		optS->marker_face_color({ .5f, .7f, 1.f });
+		optS->marker_color({ .5f, .7f, 1.f });
+		optS->marker_style(line_spec::marker_style::circle);
+		hold(on);
+		auto greedS = scatter(greedT, greedlen, 8);
+		greedS->marker_face_color({ 1.f, .3f, .2f });
+		greedS->marker_color({ 1.f, .3f, .2f });
+		greedS->marker_style(line_spec::marker_style::circle);
+		title("Length vs Time for greedy,opt2 algorithms");
+		xlabel("Time [ms] (opt2 is blue)");
+		ylabel("Length");
+		save("img/greed_vs_opt2_LT.jpg");
+		hold(off); cla();
+	}
 
 #endif
 
@@ -354,25 +356,82 @@ int main()
 		solvedopt.plot("system_solved_opt2_route_" + std::to_string(i));
 		solvedgreed.plot("system_solved_greedy_route_" + std::to_string(i));
 	}
-	/*
 
-	auto optS = scatter(optT, optlen, 8);
-	//optS->marker_face_color({ 0.2f, .6f, 1.f });
-	optS->marker_face_color({ .5f, .7f, 1.f });
-	optS->marker_color({ .5f, .7f, 1.f });
-	optS->marker_style(line_spec::marker_style::circle);
-	hold(on);
-	auto greedS = scatter(greedT, greedlen, 8);
-	//greedS->marker_face_color({ 1.f, .3f, .3f });
-	greedS->marker_face_color({ 1.f, .3f, .2f });
-	greedS->marker_color({ 1.f, .3f, .2f });
-	greedS->marker_style(line_spec::marker_style::circle);
-	title("Length vs Time for greedy,opt2 algorithms");
-	xlabel("Time [us] (opt2 is blue)");
-	ylabel("Length");
-	save("img/greed_vs_opt2_M_LT.jpg");
-	hold(off); cla();
-	*/
+	{
+		auto optS = scatter(optT, optlen, 8);
+		//optS->marker_face_color({ 0.2f, .6f, 1.f });
+		optS->marker_face_color({ .5f, .7f, 1.f });
+		optS->marker_color({ .5f, .7f, 1.f });
+		optS->marker_style(line_spec::marker_style::circle);
+		hold(on);
+		auto greedS = scatter(greedT, greedlen, 8);
+		//greedS->marker_face_color({ 1.f, .3f, .3f });
+		greedS->marker_face_color({ 1.f, .3f, .2f });
+		greedS->marker_color({ 1.f, .3f, .2f });
+		greedS->marker_style(line_spec::marker_style::circle);
+		title("Length vs Time for greedy,opt2 algorithms");
+		xlabel("Time [ms] (opt2 is blue)");
+		ylabel("Length");
+		save("img/greed_vs_opt2_M_LT.jpg");
+		hold(off); cla();
+	}
+
+	std::cout << "\n--59.8--\n" << std::endl;
+
+	itinerary = std::vector<way>({ Route({Address({0,1}), Address({2,0}), Address({3,1}),
+		Address({2,4}), Address({-5,5}), Address({-2,4}), Address({3,3}),
+		Address({2,8})}),
+	Route({Address({-4.2,4}), Address({1.5,3}),
+		Address({-6.2,4}), Address({1.5,-8}), Address({-2,-2}),
+		Address({3.2,4}), Address({1.4,-8}), Address({-1,-2}) }),
+	Route({Address({-8,-4.2}), Address({1.5,3.5}), Address({-7,-4.6})}),
+	Route({Address({-14,-3.2}), Address({15,7.5}), Address({-20,-6.6}),
+		Address({-7.2,5}), Address({0.5,-9}), Address({-3,-1}),
+		Address({4.2,5.4}), Address({2.4,-6}), Address({-3,-5}) }) });
+
+	std::vector<double> x;
+
+	for (int i = 0; i < loopMax; i++)
+	{
+
+		std::shuffle(itinerary.begin(), itinerary.end(), rng);
+		system = MultiplePath(itinerary);
+		x.push_back(1.0*system.randomPrime(double(i) / double(loopMax), rng) / system.n_deliveries());
+
+		start = high_resolution_clock::now();
+		solvedopt = system.opt2_heuristic();
+		stop = high_resolution_clock::now();
+		optlen.push_back(solvedopt.length());
+		optT.push_back(duration_cast<milliseconds>(stop - start).count());
+
+		start = high_resolution_clock::now();
+		solvedgreed = system.opt2_heuristic(false);
+		stop = high_resolution_clock::now();
+		greedT.push_back(duration_cast<milliseconds>(stop - start).count());
+		greedlen.push_back(solvedgreed.length());
+
+		solvedopt.plot("system_solved_opt2_route_" + std::to_string(i));
+		solvedgreed.plot("system_solved_greedy_route_" + std::to_string(i));
+	}
+
+	{
+		plot(x, greedlen, "r", x, optlen, "b");
+		title("Length vs primeAddresses for greedy,opt2 algorithms");
+		xlabel("~ prime Address % (opt2 is blue)");
+		ylabel("Length");
+		save("img/greed_vs_opt2_M_L_prime.jpg");
+		hold(off); cla();
+	}
+
+	{
+		plot(x, greedT, "r", x, optT, "b");
+		title("Time vs primeAddresses for greedy,opt2 algorithms");
+		xlabel("~ prime Address % (opt2 is blue)");
+		ylabel("Time");
+		save("img/greed_vs_opt2_M_T_prime.jpg");
+		hold(off); cla();
+	}
+
 	//
 	std::cout << "\n****************" << std::endl;
 	std::cout << "Testing Success!" << std::endl;

@@ -12,7 +12,8 @@ std::string Address::to_string(double a)
 
 Address::Address() : i(0), j(0) {};
 
-Address::Address(double i, double j) : i(i), j(j) {};
+Address::Address(double i, double j) : i(i), j(j) {}
+Address::Address(double i, double j, bool prime) : i(i), j(j), prime(prime) {}
 
 double Address::distance(Address a)
 {
@@ -49,4 +50,13 @@ const double Address::x()
 const double Address::y()
 {
 	return j;
-};
+}
+const bool Address::isPrime()
+{
+	return prime;
+}
+
+void Address::makePrime()
+{
+	prime = true;
+}

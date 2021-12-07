@@ -27,5 +27,6 @@ public:
 		int last);
 	static std::vector<Address>::iterator begin(way w);
 	static void remove(way& w, int index);
+	static int countPrimes(way& w,int v1, int v2);
 	static void print(way w);
 };

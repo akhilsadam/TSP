@@ -8,6 +8,7 @@
 #include "Graph.h"
 #include <variant>
 #include <Way.h>
+#include <random>
 using way = std::variant<AddressList, Route>;
 
 /// <summary>
@@ -38,6 +39,7 @@ public:
 	void swap(int p1, int p2, int v11, int v12, int v21, int v22); // non-equal segment swap
 	MultiplePath swapAndOptimize(int p1, int p2, int v11, int v12, int v21, int v22, bool opt2=true);
 	MultiplePath opt2_heuristic(bool opt2=true);
+	int randomPrime(double percentage, std::mt19937 rng_mt);
 	void plot(std::string path="multiple.jpg");
 	void print();
 };

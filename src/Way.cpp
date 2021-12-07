@@ -1,4 +1,5 @@
 #include <vector>
+#include <Address.h>
 #include "AddressList.h"
 #include "Route.h"
 #include "Graph.h"
@@ -129,6 +130,28 @@ void Way::remove(way& w, int index)
 		auto& a2 = std::get<Route>(w);
 		a2.erase(a2.begin() + index);
 	}
+}
+
+int Way::countPrimes(way& w, int v1, int v2)
+{
+	bool isAddressList = true;
+	if (w.index() != 0)
+	{
+		isAddressList = false;
+	}
+	int count = 0;
+	for (int i = v1; i < v2; i++)
+	{
+		if (isAddressList)
+		{
+			if (Address(std::get<AddressList>(w)[i]).isPrime()) count++;
+		}
+		else if (Address(std::get<Route>(w)[i]).isPrime())
+		{
+			count++;
+		}
+	}
+	return count;
 }
 
 void Way::print(way w)

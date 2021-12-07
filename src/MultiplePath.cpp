@@ -9,6 +9,7 @@
 #include <MultiplePath.h>
 #include <Way.h>
 #include <ostream>
+#include <random>
 using way = std::variant<AddressList, Route>;
 
 MultiplePath::MultiplePath() {}
@@ -96,7 +97,7 @@ void MultiplePath::removeDuplicates()
 			}
 		}
 	}
-	print();
+	//print();
 }
 void MultiplePath::swap(int p1, int p2, int v1, int v2)
 {
@@ -130,20 +131,27 @@ void MultiplePath::swap(int p1, int p2, int v11, int v12, int v21, int v22)
 
 	way w1 = schedule[p1];
 	way w2 = schedule[p2];
-	// cross-insertion
-	//way w3 = Way::insert(w2, Way::begin(w2) + v21, Way::begin(w1) + v11, Way::begin(w1) + v12);
-	w2 = Way::insert(w1,w2,v21,v11,v12);
-	//w1 = Way::insert(w1, Way::begin(w1) + v11, Way::begin(w2) + v21 + l1, Way::begin(w2) + v22 + l1);
-	w1 = Way::insert(w2,w1,v11,v21 + l1,v22 + l1);
 
-	// erasure
-	/*w1 = Way::erase(w1, Way::begin(w1) + v11 + l2, Way::begin(w1) + v12 + l2);*/
-	w1 = Way::erase(w1, v11 + l2, v12 + l2);
-	/*w2 = Way::erase(w2, Way::begin(w2) + v21 + l1, Way::begin(w2) + v22 + l1);*/
-	w2 = Way::erase(w2, v21 + l1, v22 + l1);
-	// replacement
-	schedule[p1] = w1;
-	schedule[p2] = w2;
+	int cp1 = Way::countPrimes(w1, v11, v12);
+	int cp2 = Way::countPrimes(w2, v21, v22);
+
+	if ((cp1 + cp2) == 0) 
+	{
+		// cross-insertion
+		//way w3 = Way::insert(w2, Way::begin(w2) + v21, Way::begin(w1) + v11, Way::begin(w1) + v12);
+		w2 = Way::insert(w1, w2, v21, v11, v12);
+		//w1 = Way::insert(w1, Way::begin(w1) + v11, Way::begin(w2) + v21 + l1, Way::begin(w2) + v22 + l1);
+		w1 = Way::insert(w2, w1, v11, v21 + l1, v22 + l1);
+
+		// erasure
+		/*w1 = Way::erase(w1, Way::begin(w1) + v11 + l2, Way::begin(w1) + v12 + l2);*/
+		w1 = Way::erase(w1, v11 + l2, v12 + l2);
+		/*w2 = Way::erase(w2, Way::begin(w2) + v21 + l1, Way::begin(w2) + v22 + l1);*/
+		w2 = Way::erase(w2, v21 + l1, v22 + l1);
+		// replacement
+		schedule[p1] = w1;
+		schedule[p2] = w2;
+	}
 }
 MultiplePath MultiplePath::swapAndOptimize(int p1, int p2, int v11, int v12, int v21, int v22, bool opt2)
 {
@@ -223,6 +231,29 @@ MultiplePath MultiplePath::opt2_heuristic(bool opt2)
 	}
 
 	return best;
+}
+int MultiplePath::randomPrime(double percentage, std::mt19937 rng_mt)
+{
+	int nprime = percentage * n_deliveries();
+	std::cout << "nprime" << nprime << std::endl;
+	int maxval = rng_mt.max();
+
+	for (int n = 0; n < schedule.size(); n++)
+	{
+		way path = schedule[n];
+		for (int i = 0; i < Way::size(path); i++)
+		{
+			Address x = Way::get(path, i);
+			if (percentage > (rng_mt() / maxval))
+			{
+				x.makePrime();
+			}
+			Way::set(path, i, x);
+		}
+		schedule[n] = path;
+	}
+
+	return nprime;	
 }
 void MultiplePath::plot(std::string name)
 {
