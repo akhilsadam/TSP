@@ -410,8 +410,8 @@ int main()
 		greedT.push_back(duration_cast<milliseconds>(stop - start).count());
 		greedlen.push_back(solvedgreed.length());
 
-		solvedopt.plot("system_solved_opt2_route_" + std::to_string(i));
-		solvedgreed.plot("system_solved_greedy_route_" + std::to_string(i));
+		solvedopt.plot("system_solved_opt2_route_prime_" + std::to_string(i));
+		solvedgreed.plot("system_solved_greedy_route_prime_" + std::to_string(i));
 	}
 
 	{
