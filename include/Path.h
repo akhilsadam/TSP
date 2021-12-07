@@ -12,7 +12,7 @@ class Path
 {
 protected:
 	std::vector<Address> path;
-	virtual std::optional<Address> index_closest_to(Address a, Path& mask, bool masking = false);
+	virtual std::optional<Address> index_closest_to(Address a, Path& mask, bool masking = false, bool notEndpoint = false);
 	void remove_last();
 public:
 	Path();
@@ -29,6 +29,7 @@ public:
 	void insert(int position, const Address a);
 	void insert(std::vector<Address>::iterator position, std::vector<Address>::iterator first, std::vector<Address>::iterator last);
 	void erase(std::vector<Address>::iterator first, std::vector<Address>::iterator last);
+	void erase(std::vector<Address>::iterator pos);
 	void clear();
 
 	bool in_path(Address a);
@@ -36,6 +37,7 @@ public:
 	void add_address(Address a);
 	virtual double length();
 	Address index_closest_to(Address a);
+	void removeDuplicates();
 
 	void set(int i, Address a);
 

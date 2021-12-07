@@ -5,6 +5,8 @@
 #include <Path.h>
 #include <Address.h>
 #include <cassert>
+#include <vector>
+#include <algorithm>
 
 Path::Path(){}
 Path::Path(std::vector<Address> in_path): path(in_path){}
@@ -28,13 +30,15 @@ std::string Path::display()
 
 int Path::size() const
 {
-	return std::size(path);
+	return path.size();
 }
 
 double Path::length()
 {
 	double len = 0.0;
-	for (int i = 0; i < std::size(path) - 1; i++)
+	int L = path.size();
+	if (L == 0) return len;
+	for (int i = 0; i < L - 1; i++)
 	{
 		len += path[i].distance(path[i + 1]);
 	}
@@ -70,6 +74,11 @@ void Path::insert(std::vector<Address>::iterator position, std::vector<Address>:
 void Path::erase(std::vector<Address>::iterator first, std::vector<Address>::iterator last)
 {
 	path.erase(first, last);
+}
+
+void Path::erase(std::vector<Address>::iterator first)
+{
+	path.erase(first,first+1);
 }
 
 void Path::clear()
@@ -112,12 +121,17 @@ Address Path::index_closest_to(Address a)
 		return Address();
 	}
 }
+void Path::removeDuplicates()
+{
+	auto last = std::unique(path.begin(), path.end());
+	path.erase(last, path.end());
+}
 void Path::set(int i, Address a)
 {
 	assert(i >= 0); assert(i < path.size());
 	path[i] = a;
 }
-std::optional<Address> Path::index_closest_to(Address a, Path& blacklist, bool masking)
+std::optional<Address> Path::index_closest_to(Address a, Path& blacklist, bool masking,bool notEndpoint)
 {
 
 	// mask setup to ignore addresses in blacklist
@@ -126,7 +140,10 @@ std::optional<Address> Path::index_closest_to(Address a, Path& blacklist, bool m
 	bool maskNotEmpty = false; // make sure mask was used atleast once!
 
 	int start = 0;
-	int lengthT = std::size(path) - start;
+	int lengthT = path.size() - start;
+	//std::cout << lengthT << std::endl;
+
+
 	if (lengthT < 1)
 	{
 		std::cout << "[ERROR]: Empty path has no vertices!" << std::endl;
@@ -148,16 +165,28 @@ std::optional<Address> Path::index_closest_to(Address a, Path& blacklist, bool m
 
 	double min_distance = -1;
 	double ith_distance;
+
+	if (notEndpoint) // Not including start or endpoint.
+	{
+		//start++;
+		lengthT--;
+	}
+
+	//std::cout << lengthT << std::endl;
 	int j = start;
+	//std::cout << start << "," << lengthT << std::endl;
 	for (int i = start; i < lengthT; i++)
 	{
 		if (masking)
 		{
 			mask = !blacklist.in_path(path[i]);
+			//std::cout << " m " << mask << std::endl;
+			//std::cout << " bl " << blacklist.display() << std::endl;
 		}
 		if (mask)
 		{
 			ith_distance = a.distance(path[i]);
+			//std::cout << " d " << ith_distance << std::endl;
 			if (ith_distance / min_distance < 1)
 			{
 				maskNotEmpty = true;

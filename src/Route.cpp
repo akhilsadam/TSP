@@ -18,7 +18,7 @@ void Route::add_address(Address a)
 {
 	if (in_path(a))
 	{
-		std::cout << "[WARNING] vertex " << a.display() << " pre - existing in tour." << std::endl;
+		//std::cout << "[WARNING] vertex " << a.display() << " pre - existing in tour." << std::endl;
 		return;
 	}
 	else
@@ -51,15 +51,17 @@ void Route::print()
 }
 Route Route::greedy_route()
 {
-
-	AddressList greedypath = ((AddressList)*this).greedy_route();
+	AddressList temp{ *this };
+	temp.add_address(depot);
+	AddressList greedypath = temp.greedy_route();
 	Route greedytour;
 	greedytour.add_address(greedypath);
 	return greedytour;
 };
 Route Route::opt2_route()
 {
-	AddressList opt2path = ((AddressList)*this).opt2_route(true);
+	
+	AddressList opt2path = AddressList(*this).opt2_route(true);
 	Route opt2tour;
 	opt2tour.add_address(opt2path);
 	return opt2tour;

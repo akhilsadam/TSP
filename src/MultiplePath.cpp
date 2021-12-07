@@ -16,8 +16,9 @@ MultiplePath::MultiplePath(std::vector<AddressList> in_paths)
 {
 	for (auto path : in_paths)
 	{
-		schedule.push_back(path);
+		schedule.push_back(path);	
 	}
+	MultiplePath::removeDuplicates();
 }
 MultiplePath::MultiplePath(std::vector<Route> in_paths)
 {
@@ -33,6 +34,7 @@ MultiplePath::MultiplePath(std::vector<way> in_paths): schedule(in_paths)
 		std::cout << "[ERROR]: Cannot handle so many paths in MultiplePath object" << std::endl;
 		throw("");
 	}
+	MultiplePath::removeDuplicates();
 }
 int MultiplePath::size()
 {
@@ -59,6 +61,41 @@ double MultiplePath::length()
 way& MultiplePath::operator[](int i)
 {
 	return schedule[i];
+}
+void MultiplePath::removeDuplicates()
+{
+	std::vector<Address> current;
+	Address x;
+	bool newElement;
+	for (int n = 0; n < schedule.size(); n++)
+	{
+		way& path = schedule[n];
+		for (int i =0; i< Way::size(path);i++)
+		{
+			x = Way::get(path, i);
+			//x.print();
+			newElement = true;
+
+			for (auto a : current)
+			{
+				/*a.print();
+				x.print();*/
+				if (a == x)
+				{
+					Way::remove(path, i);
+					std::cout << "[WARNING] Removed duplicate addresses in MultiplePath object." << std::endl;
+					newElement = false;
+					i--;
+				}
+			}
+			
+			if(newElement)
+			{
+				current.push_back(x);
+			}
+		}
+	}
+	print();
 }
 void MultiplePath::swap(int p1, int p2, int v1, int v2)
 {
@@ -130,7 +167,7 @@ MultiplePath MultiplePath::swapAndOptimize(int p1, int p2, int v11, int v12, int
 }
 MultiplePath MultiplePath::opt2_heuristic(bool opt2)
 {
-	int start{ 0 }; //assuming cannot change start and end(since the depot position is fixed)
+	int start{ 1 }; //assuming cannot change start and end(since the depot position is fixed)
 	MultiplePath best = *this;
 	int npath = size();
 	int N, M;
@@ -159,9 +196,10 @@ MultiplePath MultiplePath::opt2_heuristic(bool opt2)
 								current = best.swapAndOptimize(i, j, v11, v12, v21, v22, opt2);
 								if (current.length() < best.length())
 								{
+									//std::cout << best.n_deliveries() << " " << current.n_deliveries() << " i " << i << " j " << j << std::endl;
+									//assert(best.n_deliveries() == current.n_deliveries()); // not true if we have duplicates
 									best = current;
 									restart = true;
-									std::cout << best.n_deliveries() << " ";
 									break;
 								}
 							}
@@ -188,20 +226,32 @@ MultiplePath MultiplePath::opt2_heuristic(bool opt2)
 void MultiplePath::plot(std::string name)
 {
 	Graph plt;
-	for (int i = 0; i<schedule.size();i++)
+	for (int i = 0; i < schedule.size(); i++)
 	{
 		auto path = schedule[i];
-		if (path.index() == 0)
+		if (Way::size(path) > 0)
 		{
-			plt.plot(std::get<AddressList>(path), colors[i]);
-		}
-		else
-		{
-			plt.plot(std::get<Route>(path), colors[i],true);
+			if (path.index() == 0)
+			{
+				plt.plot(std::get<AddressList>(path), colors[i]);
+			}
+			else
+			{
+				plt.plot(std::get<Route>(path), colors[i]);
+			}
 		}
 	}
 	plt.show(false);
 	plt.save(name);
+}
+void MultiplePath::print()
+{
+	std::cout << "MultiplePath: " << std::endl;
+	for (auto a : schedule)
+	{
+		Way::print(a);
+	}
+	std::cout << "--------------" << std::endl;
 };
 
 

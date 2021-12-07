@@ -17,7 +17,7 @@ using namespace std::chrono;
 using namespace matplot;
 using way = std::variant<AddressList, Route>;
 
-#define latest
+//#define latest
 
 int main()
 {
@@ -28,6 +28,12 @@ int main()
 	std::cout << "Using precision to " << minprecision << " decimal places" << std::endl;
 
 	// Note that this is only a moderate amount of testing (not really asserting every exception/etc...).
+
+	std::mt19937 rng;
+	std::vector<double> optlen, greedlen;
+	std::vector<double> optT, greedT;
+	system_clock::time_point start;
+	system_clock::time_point stop;
 
 #ifndef latest
 
@@ -88,21 +94,25 @@ int main()
 	assert(tour.index_closest_to(a) == d);
 
 	std::cout << "\n--59.3.a--\n" << std::endl;
+	path = AddressList ({ c,d,a,b });
+	AddressList path2{ {c,a,d,b} };
 	AddressList greedyPath = path.greedy_route();
-	AddressList path2; path2.add_address(b); path2.add_address(c);
-	assert(path2 == greedyPath);
 	path.print();
 	greedyPath.print();
-	path2.add_address(d);
+	assert(path2 == greedyPath);
 	path2.print();
 	greedyPath = path2.greedy_route();
-	assertion(greedyPath.length(), 3 * sqrt(2));
+	assertion(greedyPath.length(), 5 * sqrt(2));
 	greedyPath.print();
 
 	std::cout << "\n--59.3.b--\n" << std::endl;
 	Route greedyTour = tour.greedy_route();
-	assert(greedyTour == greedyPath);
+	Route testTour{ {b,c} };
+	tour.print();
 	greedyTour.print();
+	testTour.print();
+	assert(greedyTour == testTour);
+	
 
 	std::cout << "\n--59.3ex--" << std::endl;
 	std::cout << "TEST from book:\n" << std::endl;
@@ -130,6 +140,7 @@ int main()
 	plt = Graph();
 
 	std::cout << "\n--59.4.a--\n" << std::endl;
+	path = AddressList( {c,b,c} );
 	AddressList rpath = path.reverse_route(1, 2);
 	assertion(rpath.length(), sqrt(2));
 	path.print();
@@ -159,7 +170,9 @@ int main()
 	//note that the above behavior is expected and will properly throw an error if
 	// false is changed to true (no way to unit-test this behavior without 
 	// using some other assertion mechanism (as far as I know, assert is a c-function, 
-	// so using a try-catch block does not catch the exception).	
+	// so using a try-catch block does not catch the exception).
+
+	//note assuming no location needs to be visited twice...
 
 	std::cout << "\n--59.4.d--\n" << std::endl;
 	Route opt2route = route.opt2_route();
@@ -174,6 +187,7 @@ int main()
 	plt.plot(opt2route, std::string("blue"));
 	plt.show(false);
 	plt.save("2-opt-test_2");
+	opt2route.print();
 	plt = Graph();
 
 	std::cout << "\n--59.5--\n" << std::endl;
@@ -189,7 +203,11 @@ int main()
 			 O(n^2/2)*O(n+n+2n) <= TC <= O(n^2/2)*O(n+n+2n) \
 			==> O(n^3) <= TC <= O(n^4), \
 			which is pretty bad. Note the memory complexity is clearly O(n), \
-			since we only store a couple of AddressLists. ");
+			since we only store a couple of AddressLists. \
+			Comparing to the greedy method, that has a runtime complexity of under O(n^3), as implemented,\
+			and may be of O(n^2 log n).\n\n\
+			Note the removeDuplicates method is just\
+			an input sanitizer (of about O(n^2/2)). ");
 	std::cout << ans << std::endl;
 
 	std::cout << "\n--59.6--\n" << std::endl;
@@ -198,15 +216,11 @@ int main()
 			Address({2,8}), Address({-3.5,5}), Address({-4.2,4}), Address({1.5,3}),
 			Address({-6.2,4}), Address({1.5,-8}), Address({-2,-2}),
 			Address({3.2,4}), Address({1.4,-8}), Address({-1,-2}) };
-	std::mt19937 rng;
-	Route r;
-	std::vector<double> optlen, greedlen;
-	std::vector<double> optT, greedT;
-	// no need to loop over greedlen as it is deterministic.
-	system_clock::time_point start;
-	system_clock::time_point stop;
 
-	for (int i = 0; i < 60; i++)
+	// no need to loop over greedlen as it is deterministic.
+	Route r;
+
+	for (int i = 0; i < loopMax; i++)
 	{
 		r.clear();
 		std::shuffle(walk.begin(), walk.end(), rng);
@@ -217,6 +231,7 @@ int main()
 		stop = high_resolution_clock::now();
 		optlen.push_back(opt.length());
 		optT.push_back(duration_cast<milliseconds>(stop - start).count());
+		//opt.print();
 
 		start = high_resolution_clock::now();
 		Route greed = r.greedy_route();
@@ -249,9 +264,9 @@ int main()
 	}
 
 	{
-		auto h3 = hist(optT);
+		auto h3 = hist(optT); h3->num_bins(50);
 		hold(on);
-		auto h4 = hist(greedT);
+		auto h4 = hist(greedT); h4->num_bins(50);
 		//h1->normalization(histogram::normalization::probability);
 		h3->bin_width(0.25);
 		h3->face_alpha(0.5);
@@ -259,11 +274,85 @@ int main()
 		h4->bin_width(0.25);
 		h4->face_alpha(0.5);
 		title("Time Histogram for greedy,opt2 algorithms");
-		xlabel("Time [us] (opt2 is blue)");
+		xlabel("Time [ms] (opt2 is blue)");
 		ylabel("Counts");
 		save("img/greed_vs_opt2_histT.jpg");
 		hold(off); cla();
 	}
+
+	auto optS = scatter(optT, optlen, 8);
+	optS->marker_face_color({ .5f, .7f, 1.f });
+	optS->marker_color({ .5f, .7f, 1.f });
+	optS->marker_style(line_spec::marker_style::circle);
+	hold(on);
+	auto greedS = scatter(greedT, greedlen, 8);
+	greedS->marker_face_color({ 1.f, .3f, .2f });
+	greedS->marker_color({ 1.f, .3f, .2f });
+	greedS->marker_style(line_spec::marker_style::circle);
+	title("Length vs Time for greedy,opt2 algorithms");
+	xlabel("Time [us] (opt2 is blue)");
+	ylabel("Length");
+	save("img/greed_vs_opt2_LT.jpg");
+	hold(off); cla();
+
+#endif
+
+	std::cout << "\n--59.7--\n" << std::endl;
+	std::vector<way> itinerary{ AddressList({Address({0,1}), Address({2,0}), Address({3,1}),
+			Address({2,4}), Address({-5,5}), Address({-2,4}), Address({3,3}),
+			Address({2,8})}),
+		AddressList({Address({-4.2,4}), Address({1.5,3}),
+			Address({-6.2,4}), Address({1.5,-8}), Address({-2,-2}),
+			Address({3.2,4}), Address({1.4,-8}), Address({-1,-2}) }),
+		AddressList({Address({-8,-4.2}), Address({1.5,3.5}), Address({4.5,7.5})}) };
+		//AddressList({Address({-8,-4.2}), Address({1.5,3.5}), Address({4.5,7.5})}),
+		//AddressList({Address({2,2}), Address({3,3}), Address({1,1}),Address({8,8})}) };
+		/*Route({Address({1,2}), Address({2,3}), Address({3,4}),Address({3,2})}) };*/
+	MultiplePath system{ itinerary };
+	system.plot("system");
+	//system.print();
+	MultiplePath solvedopt = system.opt2_heuristic();
+	solvedopt.plot("system_solved_opt2");
+	MultiplePath solvedgreed = system.opt2_heuristic(false);
+	solvedgreed.plot("system_solved_greedy");
+
+	std::cout << "\n--59.7.b--\n" << std::endl;
+	itinerary = std::vector<way>({ Route({Address({0,1}), Address({2,0}), Address({3,1}),
+			Address({2,4}), Address({-5,5}), Address({-2,4}), Address({3,3}),
+			Address({2,8})}),
+		Route({Address({-4.2,4}), Address({1.5,3}),
+			Address({-6.2,4}), Address({1.5,-8}), Address({-2,-2}),
+			Address({3.2,4}), Address({1.4,-8}), Address({-1,-2}) }),
+		Route({Address({-8,-4.2}), Address({1.5,3.5}), Address({-7,-4.6})}) });
+	//Route({Address({1,2}), Address({2,3}), Address({3,4}),Address({3,2})}) };
+
+	system = MultiplePath(itinerary);
+	system.plot("system_route");
+	optlen.clear(); optT.clear();
+	greedlen.clear(); greedT.clear();
+
+	for (int i = 0; i < loopMax; i++)
+	{
+		
+		std::shuffle(itinerary.begin(), itinerary.end(), rng);
+		system = MultiplePath(itinerary);
+
+		start = high_resolution_clock::now();
+		solvedopt = system.opt2_heuristic();
+		stop = high_resolution_clock::now();
+		optlen.push_back(solvedopt.length());
+		optT.push_back(duration_cast<milliseconds>(stop - start).count());
+
+		start = high_resolution_clock::now();
+		solvedgreed = system.opt2_heuristic(false);
+		stop = high_resolution_clock::now();
+		greedT.push_back(duration_cast<milliseconds>(stop - start).count());
+		greedlen.push_back(solvedgreed.length());
+
+		solvedopt.plot("system_solved_opt2_route_" + std::to_string(i));
+		solvedgreed.plot("system_solved_greedy_route_" + std::to_string(i));
+	}
+	/*
 
 	auto optS = scatter(optT, optlen, 8);
 	//optS->marker_face_color({ 0.2f, .6f, 1.f });
@@ -279,43 +368,9 @@ int main()
 	title("Length vs Time for greedy,opt2 algorithms");
 	xlabel("Time [us] (opt2 is blue)");
 	ylabel("Length");
-	save("img/greed_vs_opt2_LT.jpg");
+	save("img/greed_vs_opt2_M_LT.jpg");
 	hold(off); cla();
-
-#endif
-
-	//std::cout << "\n--59.7--\n" << std::endl;
-	//std::vector<way> itinerary{ AddressList({Address({0,1}), Address({2,0}), Address({3,1}),
-	//		Address({2,4}), Address({-5,5}), Address({-2,4}), Address({3,3}),
-	//		Address({2,8})}),
-	//	AddressList({Address({-4.2,4}), Address({1.5,3}),
-	//		Address({-6.2,4}), Address({1.5,-8}), Address({-2,-2}),
-	//		Address({3.2,4}), Address({1.4,-8}), Address({-1,-2}) }),
-	//	AddressList({Address({-8,-4.2}), Address({1.5,3.5}), Address({4.5,7.5})}),
-	//	AddressList({Address({2,2}), Address({3,3}), Address({1,1}),Address({8,8})}),
-	//	Route({Address({1,2}), Address({2,3}), Address({3,4}),Address({3,2})}) };
-	//MultiplePath system{ itinerary };
-	//system.plot("system");
-	//MultiplePath solvedopt = system.opt2_heuristic();
-	//solvedopt.plot("system_solved_opt2");
-	//MultiplePath solvedgreed = system.opt2_heuristic(false);
-	//solvedgreed.plot("system_solved_greedy");
-
-	std::cout << "\n--59.7--\n" << std::endl;
-	std::vector<way> itinerary{ AddressList({Address({0,1}), Address({2,0}), Address({3,1}),
-			Address({2,4}), Address({-5,5}), Address({-2,4}), Address({3,3}),
-			Address({2,8})}),
-		AddressList({Address({-4.2,4}), Address({1.5,3}),
-			Address({-6.2,4}), Address({1.5,-8}), Address({-2,-2}),
-			Address({3.2,4}), Address({1.4,-8}), Address({-1,-2}) }) };
-	MultiplePath system{ itinerary };
-	system.plot("system");
-	MultiplePath solvedopt = system.opt2_heuristic();
-	solvedopt.plot("system_solved_opt2");
-	MultiplePath solvedgreed = system.opt2_heuristic(false);
-	solvedgreed.plot("system_solved_greedy");
-
-
+	*/
 	//
 	std::cout << "\n****************" << std::endl;
 	std::cout << "Testing Success!" << std::endl;

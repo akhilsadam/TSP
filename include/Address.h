@@ -13,8 +13,8 @@ public:
 
 	bool operator==(const Address& rhs) const;
 	bool operator!=(const Address& rhs) const;
-	const int x();
-	const int y();
+	const double x();
+	const double y();
 
 	static std::string to_string(double a); // should really be in a utils class
 };

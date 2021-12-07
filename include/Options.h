@@ -13,8 +13,11 @@ constexpr double minprecision = std::numeric_limits<double>::digits10/2.0 -1;
 //#define L1norm // this is Manhattan distance
 //#define maxnorm // this is max(dx,dy) distance
 //---------------- graph
-constexpr double legend_space = 0.05; // legend spacing
-constexpr int printDigits = 3; // # of digits to print in output
-constexpr int printDecimalDigits = 2;
-constexpr int textwidth = 60;
-const std::vector<std::string> colors = {"red","blue","yellow","green","cyan","violet","crimson"};
+const double legend_space = 0.05; // legend spacing
+const int printDigits = 5; // # of digits to print in output
+const int printDecimalDigits = 4;
+const int textwidth = 60;
+const std::vector<std::string> colors = {"red","blue","green","cyan","violet","crimson","pink"};
+const int scale = 1;
+//---------------- tests
+const int loopMax = 10;

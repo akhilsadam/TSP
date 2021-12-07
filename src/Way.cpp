@@ -116,6 +116,34 @@ way Way::erase(way w,int first, int last)
 	}
 	return w2;
 }
+
+void Way::remove(way& w, int index)
+{
+	if (w.index() == 0)
+	{
+		auto& a2 = std::get<AddressList>(w);
+		a2.erase(a2.begin() + index);
+	}
+	else
+	{
+		auto& a2 = std::get<Route>(w);
+		a2.erase(a2.begin() + index);
+	}
+}
+
+void Way::print(way w)
+{
+	if (w.index() == 0)
+	{
+		auto a2 = std::get<AddressList>(w);
+		a2.print();
+	}
+	else
+	{
+		auto a2 = std::get<Route>(w);
+		a2.print();
+	}
+}
 //way Way::erase(way w, int first, int last)
 //{
 //	way out = w;

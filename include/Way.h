@@ -26,4 +26,6 @@ public:
 		int first,
 		int last);
 	static std::vector<Address>::iterator begin(way w);
+	static void remove(way& w, int index);
+	static void print(way w);
 };

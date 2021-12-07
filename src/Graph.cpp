@@ -77,7 +77,9 @@ std::vector<std::pair<size_t,size_t>> Graph::updateEdges(AddressList& l, bool to
         n = l.size() - 1;
         e.push_back({ depotID,vertexID });
     }
-    
+
+    if (!tour) n--;
+
     for (i; i < n; i++)
     {
         e.push_back({ vertexID,vertexID + 1 });
@@ -92,9 +94,25 @@ std::vector<std::pair<size_t,size_t>> Graph::updateEdges(AddressList& l, bool to
 
 void Graph::plot(AddressList& a , std::string c, int linewidth, bool tour)
 {
+    if (a.size() == 0) return;
+
+    //a.print();
+
     auto e = updateEdges(a,tour);
     auto xs = a.x(origin);
     auto ys = a.y(origin);
+
+    //for (auto yp : xs)
+    //{
+    //    std::cout << yp << " ";
+    //}
+    //std::cout << std::endl;
+    //for (auto yp : ys)
+    //{
+    //    std::cout << yp << " ";
+    //}
+    //std::cout << std::endl;
+
     if(!tour)
     {
         display.push_back(a.disp(c));
@@ -116,10 +134,28 @@ void Graph::finalize()
         int i1 = ed.first;
         int i2 = ed.second;
         //std::cout << "[(" << x[i1] << "," << y[i1] << ") (" << x[i2] << "," << y[i2] << ") : ("<< i1 << "," << i2 << ")]" << std::endl;
-        auto a = ax->arrow(x[i1], y[i1], x[i2], y[i2]);
+        
+        auto a = ax->arrow(scale*x[i1], scale*y[i1], scale*x[i2], scale*y[i2]);
         a->color(cs[i]);
         a->line_width(lw[i]);
     }
+
+    //auto l = scatter(x, y);
+    //l->marker_face(true);
+    //
+    //std::cout << std::endl;
+    //for (auto xp : x)
+    //{
+    //    std::cout << xp << " ";
+    //}
+    //std::cout << std::endl;
+    //for (auto yp : y)
+    //{
+    //    std::cout << yp << " ";
+    //}
+
+
+
     ax->limits_mode_automatic();
     ax->xlabel("X");
     ax->ylabel("Y");

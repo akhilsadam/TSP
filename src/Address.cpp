@@ -42,11 +42,11 @@ bool Address::operator!=(const Address& rhs) const
 {
 	return !Address::operator==(rhs);
 }
-const int Address::x()
+const double Address::x()
 {
 	return i;
 }
-const int Address::y()
+const double Address::y()
 {
 	return j;
 };

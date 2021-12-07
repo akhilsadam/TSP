@@ -21,7 +21,7 @@ using way = std::variant<AddressList, Route>;
 class MultiplePath
 {
 private:
-	std::vector<way> schedule;
+	std::vector<way> schedule; // would like to optimize this (eventually...)
 public:
 	MultiplePath();
 	MultiplePath(std::vector<way> in_paths);
@@ -33,9 +33,11 @@ public:
 	double length();
 	way& operator[](int i);
 
+	void removeDuplicates();
 	void swap(int p1, int p2, int v1, int v2);	// single vertex swap, now obsolete
 	void swap(int p1, int p2, int v11, int v12, int v21, int v22); // non-equal segment swap
 	MultiplePath swapAndOptimize(int p1, int p2, int v11, int v12, int v21, int v22, bool opt2=true);
 	MultiplePath opt2_heuristic(bool opt2=true);
 	void plot(std::string path="multiple.jpg");
+	void print();
 };

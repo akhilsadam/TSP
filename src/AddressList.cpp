@@ -77,36 +77,59 @@ AddressList AddressList::greedy_route()
 {
 	// Note using masking over deletion or copy (saves memory and avoids errors).
 	int pathLen = path.size();
-	Address current(0, 0);
+
+	if (pathLen <= 1) 
+	{
+		std::cout << "0-length addresslist" << std::endl;
+		return *this; //0-length case
+	}
+
 	AddressList greed;
 	std::optional<Address> opt;
-	greed.add_address(index_closest_to(current));
-	for(int i = 0; i < pathLen; i++)
+	Address current = path[0];
+
+	greed.add_address(current);
+
+	for(int i = 1; i < pathLen; i++)
 	{
-		opt = index_closest_to(current, greed, true);
+		opt = index_closest_to(current, greed, true, true);
 		if (opt.has_value())
 		{
 			current = opt.value();
 			//std::cout << opt.value().display();
 			greed.add_address(current);
+			//greed.print();
 		}
 		else
 		{
+			//this->print();
+			//current.print();
+			//greed.print();
+			//std::cout << "Break" << std::endl;
 			break;
 		}
 	}
+	
+	greed.add_address(path[pathLen - 1]);
+
+	//assert(greed.size() == pathLen); // will fail if duplicate addresses are entered!
 	return greed;
 }
 AddressList AddressList::opt2_route(bool tour)
 {
+	int N = size() - 1;
+	if (N <= 0) return *this; //0-length case
+
 	int start = 0;
 	AddressList best = *this;
-	int N = size() - 1;
+
+	start++;
+	//N--;
 
 	if (tour)
 	{
 		best.add_address(Address());
-		start++;
+		N++;
 	}
 
 	
@@ -114,13 +137,17 @@ AddressList AddressList::opt2_route(bool tour)
 	bool restart = false;
 	while (true)
 	{
-		for (int n = start; n <= N; n++)
+		for (int n = start; n < N; n++)
 		{
 			for (int m = start; m < n; m++)
 			{
 				current = best.reverse_route(m, n, tour);
 				if (current.length() < best.length())
 				{
+					//std::cout << best.size() << "=b,c=" << current.size() << std::endl;
+					//best.print();
+					//current.print();
+					assert(best.size() == current.size());
 					best = current;
 					restart = true;
 					break;
@@ -143,7 +170,7 @@ AddressList AddressList::opt2_route(bool tour)
 	{
 		best.remove_last();
 	}
-
+	
 	return best;
 }
 
