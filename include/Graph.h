@@ -36,4 +36,5 @@ public:
 	//void wipe();
 	void show(bool screen = true);
 	void save(std::string filename = "plot");
+	static void printV(std::vector<double> v);
 };

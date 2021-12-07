@@ -1,25 +1,25 @@
-  |                                                                              |                                                                      |   0%  |                                                                              |....                                                                  |   6%
+  |                                                                              |                                                                      |   0%  |                                                                              |...                                                                   |   4%
    inline R code fragments
 
-  |                                                                              |.........                                                             |  12%
+  |                                                                              |.....                                                                 |   7%
 label: setup (with options) 
 List of 1
  $ include: logi FALSE
 
-  |                                                                              |.............                                                         |  19%
+  |                                                                              |........                                                              |  11%
   ordinary text without R code
 
-  |                                                                              |..................                                                    |  25%
+  |                                                                              |..........                                                            |  15%
 label: variablesetup (with options) 
 List of 3
  $ include: logi TRUE
  $ echo   : logi FALSE
  $ results: logi FALSE
 
-  |                                                                              |......................                                                |  31%
+  |                                                                              |.............                                                         |  19%
   ordinary text without R code
 
-  |                                                                              |..........................                                            |  38%
+  |                                                                              |................                                                      |  22%
 label: tspgif (with options) 
 List of 6
  $ include   : logi FALSE
@@ -29,40 +29,67 @@ List of 6
  $ fig.height: num 6
  $ fig.aligh : chr "center"
 
-  |                                                                              |...............................                                       |  44%
+  |                                                                              |..................                                                    |  26%
   ordinary text without R code
 
-  |                                                                              |...................................                                   |  50%
+  |                                                                              |.....................                                                 |  30%
 label: unnamed-chunk-1 (with options) 
-List of 2
+List of 4
  $ echo   : logi FALSE
  $ results: chr "hide"
+ $ message: logi FALSE
+ $ warning: logi FALSE
 
+  |                                                                              |.......................                                               |  33%
+  ordinary text without R code
+
+  |                                                                              |..........................                                            |  37%
+label: unnamed-chunk-2
+  |                                                                              |.............................                                         |  41%
+  ordinary text without R code
+
+  |                                                                              |...............................                                       |  44%
+label: unnamed-chunk-3
+  |                                                                              |..................................                                    |  48%
+  ordinary text without R code
+
+  |                                                                              |....................................                                  |  52%
+label: unnamed-chunk-4
   |                                                                              |.......................................                               |  56%
   ordinary text without R code
 
-  |                                                                              |............................................                          |  62%
-label: code (with options) 
-List of 1
- $ fig.cap: chr "The automatic numbering of this figure will only work if it includes a figure caption, user beware!"
-
-  |                                                                              |................................................                      |  69%
+  |                                                                              |.........................................                             |  59%
+label: unnamed-chunk-5
+  |                                                                              |............................................                          |  63%
   ordinary text without R code
 
-  |                                                                              |....................................................                  |  75%
-label: atable
+  |                                                                              |...............................................                       |  67%
+label: unnamed-chunk-6
+  |                                                                              |.................................................                     |  70%
+  ordinary text without R code
+
+  |                                                                              |....................................................                  |  74%
+label: unnamed-chunk-7
+  |                                                                              |......................................................                |  78%
+  ordinary text without R code
+
   |                                                                              |.........................................................             |  81%
+label: unnamed-chunk-8
+  |                                                                              |............................................................          |  85%
   ordinary text without R code
 
-  |                                                                              |.............................................................         |  88%
-label: unnamed-chunk-2 (with options) 
+  |                                                                              |..............................................................        |  89%
+label: unnamed-chunk-9
+  |                                                                              |.................................................................     |  93%
+  ordinary text without R code
+
+  |                                                                              |...................................................................   |  96%
+label: unnamed-chunk-10 (with options) 
 List of 1
  $ include: logi FALSE
 
-  |                                                                              |..................................................................    |  94%
+  |                                                                              |......................................................................| 100%
   ordinary text without R code
 
-  |                                                                              |......................................................................| 100%
-label: unnamed-chunk-3
 
-"C:/Users/sadam/AppData/Local/Pandoc/pandoc" +RTS -K512m -RTS article.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output article.html --lua-filter "C:\Users\sadam\R\win-library\4.0\bookdown\rmarkdown\lua\custom-environment.lua" --lua-filter "C:\Users\sadam\R\win-library\4.0\rmarkdown\rmarkdown\lua\pagebreak.lua" --lua-filter "C:\Users\sadam\R\win-library\4.0\rmarkdown\rmarkdown\lua\latex-div.lua" --self-contained --wrap preserve --lua-filter "C:/Users/sadam/R/win-library/4.0/pagedown/resources/lua/uri-to-fn.lua" --lua-filter "C:/Users/sadam/R/win-library/4.0/pagedown/resources/lua/loft.lua" --lua-filter "C:/Users/sadam/R/win-library/4.0/pagedown/resources/lua/footnotes.lua" --csl "C:/Users/sadam/R/win-library/4.0/pagedown/resources/csl/journal-of-statistical-software.csl" --lua-filter "C:/Users/sadam/R/win-library/4.0/pagedown/resources/lua/jss.lua" --metadata link-citations=true --mathjax "--mathjax=https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" --metadata newpage_html_class="page-break-after" --standalone --section-divs --template "styling\wp_paged.html" --no-highlight --css styling/wp.css --css styling/wp-fonts.css --css styling/wp-page.css --include-in-header "C:\Users\sadam\AppData\Local\Temp\RtmpCKvPij\rmarkdown-str9b3007b6b7be7.html" --citeproc 
+"C:/Users/sadam/AppData/Local/Pandoc/pandoc" +RTS -K512m -RTS article.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output article.html --lua-filter "C:\Users\sadam\R\win-library\4.0\bookdown\rmarkdown\lua\custom-environment.lua" --lua-filter "C:\Users\sadam\R\win-library\4.0\rmarkdown\rmarkdown\lua\pagebreak.lua" --lua-filter "C:\Users\sadam\R\win-library\4.0\rmarkdown\rmarkdown\lua\latex-div.lua" --self-contained --wrap preserve --lua-filter "C:/Users/sadam/R/win-library/4.0/pagedown/resources/lua/uri-to-fn.lua" --lua-filter "C:/Users/sadam/R/win-library/4.0/pagedown/resources/lua/loft.lua" --lua-filter "C:/Users/sadam/R/win-library/4.0/pagedown/resources/lua/footnotes.lua" --csl "C:/Users/sadam/R/win-library/4.0/pagedown/resources/csl/journal-of-statistical-software.csl" --lua-filter "C:/Users/sadam/R/win-library/4.0/pagedown/resources/lua/jss.lua" --metadata link-citations=true --mathjax "--mathjax=https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" --metadata newpage_html_class="page-break-after" --standalone --section-divs --template "styling\wp_paged.html" --no-highlight --css styling/wp.css --css styling/wp-fonts.css --css styling/wp-page.css --include-in-header "C:\Users\sadam\AppData\Local\Temp\RtmpWqzoT5\rmarkdown-strb74f41d78568a.html" --citeproc 

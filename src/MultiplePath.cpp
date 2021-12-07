@@ -234,25 +234,26 @@ MultiplePath MultiplePath::opt2_heuristic(bool opt2)
 }
 int MultiplePath::randomPrime(double percentage, std::mt19937 rng_mt)
 {
-	int nprime = percentage * n_deliveries();
-	std::cout << "nprime" << nprime << std::endl;
-	int maxval = rng_mt.max();
-
+	// https://stackoverflow.com/questions/45069219/how-to-succinctly-portably-and-thoroughly-seed-the-mt19937-prng
+	// danger -- should really keep the above in mind, but am currently not bothering as this is 
+	// probably not optimal enough to run so many times that we need more than 32bytes of information as a seed.
+	std::uniform_real_distribution<> dist(0.0, 1.0);
+	int nprime = 0;
 	for (int n = 0; n < schedule.size(); n++)
 	{
 		way path = schedule[n];
 		for (int i = 0; i < Way::size(path); i++)
 		{
 			Address x = Way::get(path, i);
-			if (percentage > (rng_mt() / maxval))
+			if (percentage > dist(rng_mt))
 			{
-				x.makePrime();
+				x.makePrime(); nprime++;
 			}
 			Way::set(path, i, x);
 		}
 		schedule[n] = path;
 	}
-
+	std::cout << "nprime" << nprime << std::endl;
 	return nprime;	
 }
 void MultiplePath::plot(std::string name)

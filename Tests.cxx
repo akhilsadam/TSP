@@ -17,7 +17,7 @@ using namespace std::chrono;
 using namespace matplot;
 using way = std::variant<AddressList, Route>;
 
-//#define latest
+#define latest
 
 int main()
 {
@@ -29,11 +29,16 @@ int main()
 
 	// Note that this is only a moderate amount of testing (not really asserting every exception/etc...).
 
+	// global variables for ease of testing
+
 	std::mt19937 rng;
 	std::vector<double> optlen, greedlen;
 	std::vector<double> optT, greedT;
 	system_clock::time_point start;
 	system_clock::time_point stop;
+	MultiplePath system;
+	MultiplePath solvedopt;
+	MultiplePath solvedgreed;
 
 #ifndef latest
 
@@ -218,7 +223,6 @@ int main()
 			Address({-6.2,4}), Address({1.5,-8}), Address({-2,-2}),
 			Address({3.2,4}), Address({1.4,-8}), Address({-1,-2}) };
 
-	// no need to loop over greedlen as it is deterministic.
 	Route r;
 
 	for (int i = 0; i < loopMax; i++)
@@ -298,8 +302,6 @@ int main()
 		hold(off); cla();
 	}
 
-#endif
-
 	std::cout << "\n--59.7--\n" << std::endl;
 	std::vector<way> itinerary{ AddressList({Address({0,1}), Address({2,0}), Address({3,1}),
 			Address({2,4}), Address({-5,5}), Address({-2,4}), Address({3,3}),
@@ -308,15 +310,15 @@ int main()
 			Address({-6.2,4}), Address({1.5,-8}), Address({-2,-2}),
 			Address({3.2,4}), Address({1.4,-8}), Address({-1,-2}) }),
 		AddressList({Address({-8,-4.2}), Address({1.5,3.5}), Address({4.5,7.5})}) };
-		//AddressList({Address({-8,-4.2}), Address({1.5,3.5}), Address({4.5,7.5})}),
-		//AddressList({Address({2,2}), Address({3,3}), Address({1,1}),Address({8,8})}) };
-		/*Route({Address({1,2}), Address({2,3}), Address({3,4}),Address({3,2})}) };*/
-	MultiplePath system{ itinerary };
+	//AddressList({Address({-8,-4.2}), Address({1.5,3.5}), Address({4.5,7.5})}),
+	//AddressList({Address({2,2}), Address({3,3}), Address({1,1}),Address({8,8})}) };
+	/*Route({Address({1,2}), Address({2,3}), Address({3,4}),Address({3,2})}) };*/
+	system{ itinerary };
 	system.plot("system");
 	//system.print();
-	MultiplePath solvedopt = system.opt2_heuristic();
+	solvedopt = system.opt2_heuristic();
 	solvedopt.plot("system_solved_opt2");
-	MultiplePath solvedgreed = system.opt2_heuristic(false);
+	solvedgreed = system.opt2_heuristic(false);
 	solvedgreed.plot("system_solved_greedy");
 
 	std::cout << "\n--59.7.b--\n" << std::endl;
@@ -337,7 +339,7 @@ int main()
 
 	for (int i = 0; i < loopMax; i++)
 	{
-		
+
 		std::shuffle(itinerary.begin(), itinerary.end(), rng);
 		system = MultiplePath(itinerary);
 
@@ -375,10 +377,12 @@ int main()
 		save("img/greed_vs_opt2_M_LT.jpg");
 		hold(off); cla();
 	}
+	
 
+#endif
 	std::cout << "\n--59.8--\n" << std::endl;
 
-	itinerary = std::vector<way>({ Route({Address({0,1}), Address({2,0}), Address({3,1}),
+	std::vector<way> itinerary = std::vector<way>({ Route({Address({0,1}), Address({2,0}), Address({3,1}),
 		Address({2,4}), Address({-5,5}), Address({-2,4}), Address({3,3}),
 		Address({2,8})}),
 	Route({Address({-4.2,4}), Address({1.5,3}),
@@ -390,13 +394,20 @@ int main()
 		Address({4.2,5.4}), Address({2.4,-6}), Address({-3,-5}) }) });
 
 	std::vector<double> x;
+	optlen.clear(); optT.clear();
+	greedlen.clear(); greedT.clear();
 
-	for (int i = 0; i < loopMax; i++)
+	int n;
+	double p;
+	for (int i = 0; i < 3*loopMax; i++)
 	{
 
 		std::shuffle(itinerary.begin(), itinerary.end(), rng);
 		system = MultiplePath(itinerary);
-		x.push_back(1.0*system.randomPrime(double(i) / double(loopMax), rng) / system.n_deliveries());
+		n = system.randomPrime(static_cast<double>(i%loopMax) / static_cast<double>(loopMax), rng);
+		p = static_cast<double>(n) / static_cast<double>(system.n_deliveries());
+		//std::cout << "P " << p << std::endl;
+		x.push_back(p);
 
 		start = high_resolution_clock::now();
 		solvedopt = system.opt2_heuristic();
@@ -415,27 +426,50 @@ int main()
 	}
 
 	{
-		plot(x, greedlen, "r", x, optlen, "b");
+		//Graph::printV(x);
+		auto optS = scatter(x, optlen);
+		optS->marker_face_color("b"); optS->marker_color("b");
+		hold(on);
+		auto greedS = scatter(x, greedlen);
+		greedS->marker_face_color("r"); greedS->marker_color("r");
 		title("Length vs primeAddresses for greedy,opt2 algorithms");
-		xlabel("~ prime Address % (opt2 is blue)");
+		xlabel("prime Address % (opt2 is blue)");
 		ylabel("Length");
 		save("img/greed_vs_opt2_M_L_prime.jpg");
 		hold(off); cla();
 	}
 
 	{
-		plot(x, greedT, "r", x, optT, "b");
+		auto optS = scatter(x, optT);
+		optS->marker_face_color("b"); optS->marker_color("b");
+		hold(on);
+		auto greedS = scatter(x, greedT); 
+		greedS->marker_face_color("r"); greedS->marker_color("r");
 		title("Time vs primeAddresses for greedy,opt2 algorithms");
-		xlabel("~ prime Address % (opt2 is blue)");
+		xlabel("prime Address % (opt2 is blue)");
 		ylabel("Time");
 		save("img/greed_vs_opt2_M_T_prime.jpg");
 		hold(off); cla();
 	}
 
+
+	{
+		auto optS = scatter(optT, optlen, 8);
+		optS->marker_face_color("b"); optS->marker_color("b");
+		hold(on);
+		auto greedS = scatter(greedT, greedlen, 8);
+		greedS->marker_face_color("r"); greedS->marker_color("r");
+		title("Length vs Time for greedy,opt2 algorithms");
+		xlabel("Time [ms] (opt2 is blue)");
+		ylabel("Length");
+		save("img/greed_vs_opt2_M_LT_prime.jpg");
+		hold(off); cla();
+	}
+
 	//
 	std::cout << "\n****************" << std::endl;
-	std::cout << "Testing Success!" << std::endl;
-	std::cout << "****************" << std::endl;
+	std::cout << "Testing Complete!" << std::endl;
+	std::cout << "*****************" << std::endl;
 
 	return 0;
 }

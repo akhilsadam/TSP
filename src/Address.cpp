@@ -28,6 +28,7 @@ double Address::distance(Address a)
 
 std::string Address::display()
 {
+	if (prime)	return "(" + Address::to_string(i) + "," + Address::to_string(j) + ",Prime)";
 	return "(" + Address::to_string(i) + "," + Address::to_string(j) + ")";
 }
 

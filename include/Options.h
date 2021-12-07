@@ -20,4 +20,4 @@ const int textwidth = 60;
 const std::vector<std::string> colors = {"red","blue","green","cyan","violet","crimson","pink"};
 const int scale = 1;
 //---------------- tests
-const int loopMax = 60;
+const int loopMax = 3;

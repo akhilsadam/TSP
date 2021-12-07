@@ -193,6 +193,16 @@ void Graph::save(std::string filename)
     matplot::save("img/" + filename + ".jpg");
 }
 
+void Graph::printV(std::vector<double> v)
+{
+    std::cout << "[";
+    for (auto u : v)
+    {
+        std::cout << u << ",";
+    }
+    std::cout << "]";
+}
+
 void Graph::makeLegend()
 {
     double n = display.size();
