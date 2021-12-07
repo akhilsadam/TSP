@@ -173,6 +173,7 @@ int main()
 	// so using a try-catch block does not catch the exception).
 
 	//note assuming no location needs to be visited twice...
+	//note depot CANNOT be in the address list!
 
 	std::cout << "\n--59.4.d--\n" << std::endl;
 	Route opt2route = route.opt2_route();
@@ -328,6 +329,7 @@ int main()
 
 	system = MultiplePath(itinerary);
 	system.plot("system_route");
+	system.print();
 	optlen.clear(); optT.clear();
 	greedlen.clear(); greedT.clear();
 

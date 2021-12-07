@@ -65,6 +65,7 @@ way& MultiplePath::operator[](int i)
 void MultiplePath::removeDuplicates()
 {
 	std::vector<Address> current;
+	Address depot{};
 	Address x;
 	bool newElement;
 	for (int n = 0; n < schedule.size(); n++)
@@ -89,7 +90,7 @@ void MultiplePath::removeDuplicates()
 				}
 			}
 			
-			if(newElement)
+			if((newElement) && (x!=depot))
 			{
 				current.push_back(x);
 			}
