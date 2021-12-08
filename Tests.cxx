@@ -18,7 +18,7 @@ using namespace std::chrono;
 using namespace matplot;
 using way = std::variant<AddressList, Route>;
 
-#define latest
+//#define latest
 
 int main()
 {

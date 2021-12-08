@@ -65,12 +65,12 @@ imshow <- function(imgname)
 #}
 ```
 
-```{r,echo=FALSE,results='hide',message=FALSE,warning=FALSE}
+```{r,eval=FALSE,echo=FALSE,results='hide',message=FALSE,warning=FALSE}
 loopMax = 30
 
 saveGIF(
 {
-  for (i in 0:59)
+  for (i in 0:(loopMax-1))
  {
    imshow(paste("greed_vs_opt2_",i,".jpg",sep=""))
  }
@@ -83,7 +83,7 @@ ani.height = 420,
 
 saveGIF(
 {
-  for (i in 0:59)
+  for (i in 0:(loopMax-1))
  {
    imshow(paste("system_solved_opt2_route_",i,".jpg",sep=""))
  }
@@ -96,7 +96,7 @@ ani.height = 420,
 
 saveGIF(
 {
-  for (i in 0:59)
+  for (i in 0:(loopMax-1))
  {
    imshow(paste("system_solved_greedy_route_",i,".jpg",sep=""))
  }
@@ -109,7 +109,7 @@ ani.height = 420,
 
 saveGIF(
 {
-  for (i in 0:59)
+  for (i in 0:(3*loopMax-1))
  {
    imshow(paste("system_solved_opt2_route_prime_",i,".jpg",sep=""))
  }
@@ -122,7 +122,7 @@ ani.height = 420,
 
 saveGIF(
 {
-  for (i in 0:59)
+  for (i in 0:(3*loopMax-1))
  {
    imshow(paste("system_solved_greedy_route_prime_",i,".jpg",sep=""))
  }
@@ -135,7 +135,7 @@ ani.height = 420,
 
 saveGIF(
 {
-  for (i in 0:loopMax)
+  for (i in 0:(loopMax-1))
  {
    imshow(paste("sys_evo_",i,".jpg",sep=""))
  }
@@ -148,12 +148,38 @@ ani.height = 420,
 
 saveGIF(
 {
-  for (i in 0:loopMax)
+  for (i in 0:(loopMax-1))
  {
-   imshow(paste("sys_evo_opt2",i,".jpg",sep=""))
+   imshow(paste("sys_evo_opt2_",i,".jpg",sep=""))
  }
 },
-movie.name = "sys_evo.gif", 
+movie.name = "sys_evo_opt2.gif", 
+interval = 0.5, 
+ani.width = 560, 
+ani.height = 420,
+)
+
+saveGIF(
+{
+  for (i in 0:(loopMax-1))
+ {
+   imshow(paste("sys_evo_opt2_add4_",i,".jpg",sep=""))
+ }
+},
+movie.name = "sys_evo_opt2_add4.gif", 
+interval = 0.5, 
+ani.width = 560, 
+ani.height = 420,
+)
+
+saveGIF(
+{
+  for (i in 0:(loopMax-1))
+ {
+   imshow(paste("sys_evo_greed_add4_",i,".jpg",sep=""))
+ }
+},
+movie.name = "sys_evo_greed_add4.gif", 
 interval = 0.5, 
 ani.width = 560, 
 ani.height = 420,
@@ -199,21 +225,24 @@ imshow("greedy-test.jpg")
 
 We follow the below pseudocode as our implementation of 2-opt.
 
-repeat until no improvement is made {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;best_distance = calculateTotalDistance(existing_route)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;start_again:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;for (i = 0; i <= number of nodes eligible to be swapped - 1; i++) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (k = i + 1; k <= number of nodes eligible to be swapped; k++) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new_route = 2optSwap(existing_route, i, k)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new_distance = calculateTotalDistance(new_route)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (new_distance < best_distance) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;existing_route = new_route<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;best_distance = new_distance<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto start_again<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-}<br>
+```{r}
+cat(paste0(
+"repeat until no improvement is made {\n",
+    "\t\tbest_distance = calculateTotalDistance(existing_route)\n",
+    "\t\tstart_again:\n",
+    "\t\tfor (i = 0; i <= number of nodes eligible to be swapped - 1; i++) {\n",
+        "\t\tfor (k = i + 1; k <= number of nodes eligible to be swapped; k++) {\n",
+            "\t\t\tnew_route = 2optSwap(existing_route, i, k)\n",
+            "\t\t\tnew_distance = calculateTotalDistance(new_route)\n",
+            "\t\t\tif (new_distance < best_distance) {\n",
+                "\t\t\t\texisting_route = new_route\n",
+                "\t\t\t\tbest_distance = new_distance\n",
+                "\t\t\t\tgoto start_again\n",
+            "\t\t\t}\n",
+        "\t\t}\n",
+    "\t}\n",
+"}\n"), sep = "\n\n")
+```
 
 Our implementation again makes the following additional requirement that the start and endpoints of any path or tour are not changed.
 
@@ -308,7 +337,7 @@ Below are 90 plots of a randomized delivery itinerary (as before), with differin
 
 We can see that as we add prime vertices into the graph, the tours become more complicated and begin to cross-over each other. While the 2-opt tours are better, they rely on a single driver completing most of the deliveries; a horrible solution with respect to the drivers.
 
-The summary plots below show that as the number of prime addresses increase, the 2-opt method gains advantage over the greedy algorithm, as it still produces shorter overall systems, and actually decreases in computation time.
+The summary plots below show that as the number of prime addresses increase, the 2-opt method and the greedy method <i>do not</i> have a statistically significant change in length! From the plots above, clearly the prime addresses do fix a path, but the expected upward trend is not visible due to a lack of data. More simulation points are needed to show this behavior, especially due to the output variance from reshuffling of the input addresses.(The reshuffling causes the lowest length points, as the random output may result in the optimal configuration, and we do not have enough data to see any upward trends).
 
 ```{r}
 imshow("greed_vs_opt2_M_LT_prime.jpg")
@@ -326,9 +355,36 @@ None of the above analysis takes traffic and directional distance into account. 
 Even if all the breaks/other issues are considered, any new delivery order will create an equivalent issue, as seen below.
 
 
----- add part 9 here
+## Dynamic VRP
+ 
+ The following plots illustrate the evolution of a system over time, with each vehicle moving at 10-units per hour, and the plots are shown at approximately 1.5 frames per hour (really 0.6 hours per frame).
+ 
+ Note a particular color does not necessarily correspond to a particular vehicle.
+ 
+![](sys_evo.gif)
 
+With no optimization,the system decays as expected, with some vehicles completing far ahead of others, and the cycles are fairly complicated.
 
+![](sys_evo_opt2.gif)
+
+With some optimization (the 2-opt method), the cycles are much nicer.
+
+![](sys_evo_opt2_add4.gif)
+
+Clearly we can see that the introduction of new points (4 new addresses per hour, randomly assigned to a path), causes the paths to become overly long, as new, distant points appear in the midst of neatly separated paths.
+
+The same can be seen in the greedy version below, the only difference being that the greedy algorithm is more convoluted due to the greedy nature of that algorithm.
+
+![](sys_evo_greed_add4.gif)
+
+In the below summary plot, we have the unoptimized evolution in black, decaying to 0, the optimized (2-opt) evolution in blue, also decaying to 0, the greedy evolution with added deliveries in solid red, and the 2-opt evolution with added deliveries in solid blue.
+
+We can see that while neither the greedy nor the 2-opt algorithm is significantly better than the other, in the case of added deliveries, the 2-opt shows better stability, which would make it a better overall algorithm.
+Interestingly, for this choice of input deliveries, the unoptimized tours actually finish faster than the optimized tours!
+
+```{r}
+imshow("sys_evo_length.jpg")
+```
 
 # Conclusion and Ethics
 
