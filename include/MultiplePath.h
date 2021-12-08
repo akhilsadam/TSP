@@ -21,7 +21,7 @@ using way = std::variant<AddressList, Route>;
 
 class MultiplePath
 {
-private:
+protected:
 	std::vector<way> schedule; // would like to optimize this (eventually...)
 public:
 	MultiplePath();
@@ -42,4 +42,6 @@ public:
 	int randomPrime(double percentage, std::mt19937 rng_mt);
 	void plot(std::string path="multiple.jpg");
 	void print();
+
+	std::vector<way> getSchedule();
 };

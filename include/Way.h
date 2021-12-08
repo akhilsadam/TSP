@@ -9,9 +9,11 @@ using way = std::variant<AddressList, Route>;
 class Way
 {
 public:
-	static double length(way w);
+	static double length(way w, int n = 0);
 	static int size(way w);
 	static void set(way w, int i, Address a);
+	static way append(way w, Address x);
+	static way insert(way w, int i, Address a);
 	static const Address get(way w, int i);
 	//static const std::vector<Address> get(way w, int start,int end);
 	static way opt2(way w);
@@ -28,5 +30,6 @@ public:
 	static std::vector<Address>::iterator begin(way w);
 	static void remove(way& w, int index);
 	static int countPrimes(way& w,int v1, int v2);
+	static way lapse(way w, double distance);
 	static void print(way w);
 };

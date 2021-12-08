@@ -66,6 +66,8 @@ imshow <- function(imgname)
 ```
 
 ```{r,echo=FALSE,results='hide',message=FALSE,warning=FALSE}
+loopMax = 30
+
 saveGIF(
 {
   for (i in 0:59)
@@ -127,6 +129,32 @@ saveGIF(
 },
 movie.name = "system_solved_greedy_route_prime.gif", 
 interval = 0.1, 
+ani.width = 560, 
+ani.height = 420,
+)
+
+saveGIF(
+{
+  for (i in 0:loopMax)
+ {
+   imshow(paste("sys_evo_",i,".jpg",sep=""))
+ }
+},
+movie.name = "sys_evo.gif", 
+interval = 0.5, 
+ani.width = 560, 
+ani.height = 420,
+)
+
+saveGIF(
+{
+  for (i in 0:loopMax)
+ {
+   imshow(paste("sys_evo_opt2",i,".jpg",sep=""))
+ }
+},
+movie.name = "sys_evo.gif", 
+interval = 0.5, 
 ani.width = 560, 
 ani.height = 420,
 )

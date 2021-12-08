@@ -7,12 +7,12 @@
 AddressList::AddressList() {}
 AddressList::AddressList(std::vector<Address> in_path) : Path(in_path) {}
 
-Address AddressList::last()
+std::optional<Address> AddressList::last()
 {
 	if (std::size(path) == 0)
 	{
-		std::cout << "[ERROR] No last element in path of 0 length." << std::endl;
-		throw("");
+		std::cout << "[Warning] No last element in path of 0 length." << std::endl;
+		return{};
 	}
 	return path[std::size(path)-1];
 }

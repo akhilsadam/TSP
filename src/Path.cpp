@@ -33,10 +33,15 @@ int Path::size() const
 	return path.size();
 }
 
-double Path::length()
+double Path::length(int n)
 {
+	if (n == -1)
+	{
+		n = path.size();
+	}
+
 	double len = 0.0;
-	int L = path.size();
+	int L = n;
 	if (L == 0) return len;
 	for (int i = 0; i < L - 1; i++)
 	{

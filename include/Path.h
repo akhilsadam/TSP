@@ -35,7 +35,7 @@ public:
 	bool in_path(Address a);
 
 	void add_address(Address a);
-	virtual double length();
+	virtual double length(int n = -1);
 	Address index_closest_to(Address a);
 	void removeDuplicates();
 

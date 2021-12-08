@@ -9,7 +9,7 @@ public:
 	AddressList();
 	AddressList(std::vector<Address> in_path);
 
-	Address last();
+	std::optional<Address> last();
 	std::string display() override;
 	void print();
 

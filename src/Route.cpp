@@ -1,6 +1,7 @@
 #include "Address.h"
 #include "AddressList.h"
 #include "Route.h"
+#include <optional>
 
 Route::Route()
 {
@@ -35,9 +36,18 @@ void Route::add_address(AddressList a)
 	};
 }
 
-double Route::length()
+double Route::length(int n)
 {
-	return AddressList::length() + AddressList::last().distance(depot);
+	if ((n==-1) || (n > size()))
+	{
+		std::optional<Address> last = AddressList::last();
+		if (last.has_value())
+		{
+			return AddressList::length() + last.value().distance(depot);
+		}
+		return AddressList::length();		
+	}
+	return AddressList::length(n);
 }
 
 std::string Route::display()

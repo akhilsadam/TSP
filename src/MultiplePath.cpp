@@ -181,7 +181,6 @@ MultiplePath MultiplePath::opt2_heuristic(bool opt2)
 	int npath = size();
 	int N, M;
 
-
 	MultiplePath current;
 	bool restart = false;
 	while (true)
@@ -253,7 +252,7 @@ int MultiplePath::randomPrime(double percentage, std::mt19937 rng_mt)
 		}
 		schedule[n] = path;
 	}
-	std::cout << "nprime" << nprime << std::endl;
+	//std::cout << "nprime" << nprime << std::endl;
 	return nprime;	
 }
 void MultiplePath::plot(std::string name)
@@ -285,6 +284,10 @@ void MultiplePath::print()
 		Way::print(a);
 	}
 	std::cout << "--------------" << std::endl;
-};
+}
 
+std::vector<way> MultiplePath::getSchedule()
+{
+	return schedule;
+}
 
